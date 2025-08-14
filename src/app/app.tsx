@@ -21,6 +21,27 @@ const App: React.FC = () => {
 	const [showRegister, setShowRegister] = React.useState(false);
 	const [loginError, setLoginError] = React.useState<string | undefined>(undefined);
 	const [loggedIn, setLoggedIn] = React.useState(false);
+    // Check if user is already logged in
+    React.useEffect(() => {
+        const isLoggedIn = sessionStorage.getItem('IsLoggedIn') === 'true';
+        if (isLoggedIn){
+            // Check if last login is not more than 15 mins
+            const lastLoginTime = sessionStorage.getItem('LastLoggedInTime');
+            if (lastLoginTime) {
+                const currentTime = new Date().getTime();
+                const timeDiff = currentTime - parseInt(lastLoginTime);
+                if (timeDiff > 15 * 60 * 1000) { // 15 mins in milliseconds
+                    setLoggedIn(false);
+                    sessionStorage.removeItem('IsLoggedIn');
+                    sessionStorage.removeItem('LastLoggedInTime');
+                    sessionStorage.removeItem('Username');
+                }
+                else {
+                    setLoggedIn(true);
+                }
+            }
+        }
+    }, []);
 
 	const handleLogin = async (username: string, password: string) => {
 		setLoginError(undefined);
@@ -41,6 +62,9 @@ const App: React.FC = () => {
 		}
 		if (result.valid) {
 			setLoggedIn(true);
+            sessionStorage.setItem('IsLoggedIn', 'true');
+            sessionStorage.setItem('LastLoggedInTime', new Date().getTime().toString());
+            sessionStorage.setItem('Username', username);
 		} else {
 			setLoginError('Invalid password.');
 		}
