@@ -1,13 +1,15 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
-import { contextBridge, ipcRenderer } from 'electron';
-import registerLoginFunctions from './login'
- // Ensure login functionality is available in the preload context
 
- document.addEventListener('DOMContentLoaded', () => {
-    registerLoginFunctions();
- }); 
+import { contextBridge, ipcRenderer } from 'electron';
+
+contextBridge.exposeInMainWorld('api', {
+  registerUser: (username: string, password: string, workspacePath: string) =>
+    ipcRenderer.invoke('register-user', { username, password, workspacePath }),
+  readUserFile: (username: string, password: string, workspacePath: string) =>
+    ipcRenderer.invoke('read-user-file', { username, password, workspacePath }),
+});
 
 
 contextBridge.exposeInMainWorld('versions', {

@@ -14,15 +14,7 @@ export class BankAccountCredentails {
     private _LastUpdatedOn: Date = new Date();
 
     constructor(){}
-
-    // constructor(init?: Partial<BankAccountCredentails>) {
-    //     if (init) {
-    //         Object.keys(init).forEach(key => {
-    //             // @ts-ignore
-    //             this[key] = init[key];
-    //         });
-    //     }
-    // }
+   
 
     public get AccountHolderName(): string {
         return this._AccountHolderName;
