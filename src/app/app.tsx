@@ -12,12 +12,15 @@ declare global {
 
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
+
 import Login from './Login';
 import RegisterUser from './RegisterUser';
+import Landing from './Landing';
 
 const App: React.FC = () => {
 	const [showRegister, setShowRegister] = React.useState(false);
 	const [loginError, setLoginError] = React.useState<string | undefined>(undefined);
+	const [loggedIn, setLoggedIn] = React.useState(false);
 
 	const handleLogin = async (username: string, password: string) => {
 		setLoginError(undefined);
@@ -37,8 +40,7 @@ const App: React.FC = () => {
 			return;
 		}
 		if (result.valid) {
-			alert('Login successful!');
-			// Proceed to app...
+			setLoggedIn(true);
 		} else {
 			setLoginError('Invalid password.');
 		}
@@ -62,7 +64,9 @@ const App: React.FC = () => {
 
 	return (
 		<>
-			{showRegister ? (
+			{loggedIn ? (
+				<Landing />
+			) : showRegister ? (
 				<RegisterUser
 					onRegister={handleRegister}
 					onBackToLogin={() => setShowRegister(false)}
