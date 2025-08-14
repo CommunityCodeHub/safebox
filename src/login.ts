@@ -1,5 +1,8 @@
 import { ipcRenderer } from 'electron';
 
+
+const registerLoginFunctions = function(){
+
 const loginBtn = document.getElementById('loginBtn') as HTMLButtonElement;
 const usernameInput = document.getElementById('username') as HTMLInputElement;
 const passwordInput = document.getElementById('password') as HTMLInputElement;
@@ -75,3 +78,8 @@ if (registerForm) {
     alert('Registration successful! You can now log in.');
   });
 }
+
+
+}
+
+export default registerLoginFunctions;

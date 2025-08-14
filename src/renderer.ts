@@ -27,13 +27,15 @@
  */
 
 import './index.css';
+import './app/app.tsx';
 
-console.log('👋 This message is being logged by "renderer.js", included via webpack');
-declare const versions: {
-  chrome: () => string;
-  node: () => string;
-  electron: () => string;
-};
 
-const information = document.getElementById('info')
-information.innerText = `This app is using Chrome (v${versions.chrome()}), Node.js (v${versions.node()}), and Electron (v${versions.electron()})`
+// console.log('👋 This message is being logged by "renderer.js", included via webpack');
+// declare const versions: {
+//   chrome: () => string;
+//   node: () => string;
+//   electron: () => string;
+// };
+
+// const information = document.getElementById('info')
+// information.innerText = `This app is using Chrome (v${versions.chrome()}), Node.js (v${versions.node()}), and Electron (v${versions.electron()})`

@@ -2,7 +2,13 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { contextBridge, ipcRenderer } from 'electron';
-import './login'; // Ensure login functionality is available in the preload context
+import registerLoginFunctions from './login'
+ // Ensure login functionality is available in the preload context
+
+ document.addEventListener('DOMContentLoaded', () => {
+    registerLoginFunctions();
+ }); 
+
 
 contextBridge.exposeInMainWorld('versions', {
   node: () => process.versions.node,
@@ -10,3 +16,4 @@ contextBridge.exposeInMainWorld('versions', {
   electron: () => process.versions.electron,
   customMethod: () => ipcRenderer.invoke('custom-method'),
 }); 
+
