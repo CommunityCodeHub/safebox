@@ -1,4 +1,21 @@
-export class BankAccountCredentails {
+export interface IBankAccountCredentails {
+    AccountHolderName: string;
+    BankName: string;
+    AccountType: string;
+    AccountNumber: string;
+    CustomerId: string;
+    LoginId: string;
+    Password: string;
+    TransactionPassord: string;
+    AtmPin: string;
+    TPin: string;
+    NetbankingUrl: string;
+    CreatedOn: Date;
+    LastUpdatedOn: Date;
+    [key: string]: string | Date;
+}
+
+export class BankAccountCredentails implements IBankAccountCredentails {
     private _AccountHolderName: string = '';
     private _BankName: string = '';
     private _AccountType: string = '';
@@ -14,6 +31,7 @@ export class BankAccountCredentails {
     private _LastUpdatedOn: Date = new Date();
 
     constructor(){}
+    [key: string]: string | Date;
    
 
     public get AccountHolderName(): string {

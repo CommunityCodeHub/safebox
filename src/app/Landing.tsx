@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Tabs, Tab, Typography, Button, Modal, Paper, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import BankAccountGrid from './bank-account-credentails-component';
+import { IBankAccountCredentails } from '../entities/db-entities/bank-account-credentails';
 
 // Dummy data for demonstration
-const bankAccounts = [
-  {
-    AccountHolderName: 'John Doe',
-    BankName: 'Bank of America',
-    AccountType: 'Savings',
-    AccountNumber: '1234567890',
-    CustomerId: 'CUST001',
-    LoginId: 'john.doe',
-    Password: '********',
-    TransactionPassord: '********',
-    AtmPin: '****',
-    TPin: '****',
-    NetbankingUrl: 'https://bank.com',
-    CreatedOn: new Date().toLocaleDateString(),
-    LastUpdatedOn: new Date().toLocaleDateString(),
-  },
-];
+// const bankAccounts: IBankAccountCredentails[] = [
+//   {
+//     AccountHolderName: 'John Doe',
+//     BankName: 'Bank of America',
+//     AccountType: 'Savings',
+//     AccountNumber: '1234567890',
+//     CustomerId: 'CUST001',
+//     LoginId: 'john.doe',
+//     Password: '********',
+//     TransactionPassord: '********',
+//     AtmPin: '****',
+//     TPin: '****',
+//     NetbankingUrl: 'https://bank.com',
+//     CreatedOn: new Date(),
+//     LastUpdatedOn: new Date(),
+//   },
+// ];
 
 const appCredentials = [
   {
@@ -32,191 +34,79 @@ const appCredentials = [
   },
 ];
 
-// Only one BankAccount type definition
-// (Removed duplicate BankAccount type)
 
-const getBankAccountColumns = (onEdit: (row: BankAccount, idx: number) => void): GridColDef[] => [
-  { field: 'AccountHolderName', headerName: 'Account Holder', flex: 1 },
-  { field: 'BankName', headerName: 'Bank', flex: 1 },
-  { field: 'AccountType', headerName: 'Type', flex: 1 },
-  { field: 'AccountNumber', headerName: 'Account #', flex: 1 },
-  { field: 'CustomerId', headerName: 'Customer ID', flex: 1 },
-  { field: 'LoginId', headerName: 'Login ID', flex: 1 },
-  { field: 'NetbankingUrl', headerName: 'Netbanking URL', flex: 1 },
-  { field: 'CreatedOn', headerName: 'Created', flex: 1 },
-  { field: 'LastUpdatedOn', headerName: 'Updated', flex: 1 },
-  {
-    field: 'edit',
-    headerName: 'Edit',
-    flex: 0.5,
-    sortable: false,
-    filterable: false,
-    renderCell: (params: any) => (
-      <Button variant="text" color="primary" onClick={() => onEdit(params.row, params.row.id)}>
-        Edit
-      </Button>
-    ),
-  },
-];
+async function readBankAccountDataFromStorage(): Promise<IBankAccountCredentails[]> {
+  const username = sessionStorage.getItem('UserName');
+  const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
+  if (!workspacePath) return [];
 
-type BankAccount = {
-  AccountHolderName: string;
-  BankName: string;
-  AccountType: string;
-  AccountNumber: string;
-  CustomerId: string;
-  LoginId: string;
-  Password: string;
-  TransactionPassord: string;
-  AtmPin: string;
-  TPin: string;
-  NetbankingUrl: string;
-  CreatedOn: string;
-  LastUpdatedOn: string;
-  [key: string]: string; // index signature for dynamic access
-};
-
-const defaultBankAccount: BankAccount = {
-  AccountHolderName: '',
-  BankName: '',
-  AccountType: '',
-  AccountNumber: '',
-  CustomerId: '',
-  LoginId: '',
-  Password: '',
-  TransactionPassord: '',
-  AtmPin: '',
-  TPin: '',
-  NetbankingUrl: '',
-  CreatedOn: new Date().toLocaleDateString(),
-  LastUpdatedOn: new Date().toLocaleDateString(),
-};
-
-interface BankAccountGridProps {
-  onAdd: (rec: BankAccount) => void;
-  bankAccounts: BankAccount[];
-}
-
-interface BankAccountGridProps {
-  onAdd: (rec: BankAccount) => void;
-  onEdit: (rec: BankAccount, idx: number) => void;
-  bankAccounts: BankAccount[];
-}
-
-const BankAccountGrid: React.FC<BankAccountGridProps> = ({ onAdd, onEdit, bankAccounts }) => {
-  const [open, setOpen] = React.useState(false);
-  const [editOpen, setEditOpen] = React.useState(false);
-  const [form, setForm] = React.useState<BankAccount>({ ...defaultBankAccount });
-  const [editIdx, setEditIdx] = React.useState<number | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onAdd({ ...form, CreatedOn: new Date().toLocaleDateString(), LastUpdatedOn: new Date().toLocaleDateString() });
-    setOpen(false);
-    setForm({ ...defaultBankAccount });
-  };
-
-  const handleEdit = (rec: BankAccount, idx: number) => {
-    setForm({ ...rec });
-    setEditIdx(idx);
-    setEditOpen(true);
-  };
-
-  const handleEditSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editIdx !== null) {
-      onEdit({ ...form, LastUpdatedOn: new Date().toLocaleDateString() }, editIdx);
+  try {
+    const result = await window.api.readBankAccountFile(workspacePath);
+    if (result.success) {
+      return result.fileContent as IBankAccountCredentails[];
+    } else {
+      console.error('Failed to read bank account file:', result.error);
+      return [];
     }
-    setEditOpen(false);
-    setForm({ ...defaultBankAccount });
-    setEditIdx(null);
-  };
+  } catch (err) {
+    console.error('Error reading bank account file:', err);
+    alert('Error reading bank account file');
+    return [];
+  }
+}
 
-  const columns = React.useMemo(() => getBankAccountColumns(handleEdit), [bankAccounts]);
-  const rows = bankAccounts.map((row, i) => ({ id: i, ...row }));
+async function writeBankAccountDataToStorage(data: IBankAccountCredentails[]): Promise<void> {
+  const username = sessionStorage.getItem('UserName');
+  const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
 
-  return (
-    <Box p={2} sx={{ height: 400, width: '98%' }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">Bank Account Credentials</Typography>
-        <Button variant="contained" color="primary" onClick={() => setOpen(true)}>Add New</Button>
-      </Box>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{ pagination: { paginationModel: { pageSize: 5, page: 0 } } }}
-        pageSizeOptions={[5, 10, 20]}
-        autoHeight={false}
-      />
-      {/* Add Modal */}
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <Paper sx={{ p: 4, maxWidth: 600, mx: 'auto', my: 8 }}>
-          <Typography variant="h6" mb={2}>Add Bank Account</Typography>
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              {Object.keys(defaultBankAccount).map((key) => (
-                key !== 'CreatedOn' && key !== 'LastUpdatedOn' ? (
-                  <Grid key={key as string}>
-                    <TextField
-                      label={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                      name={key}
-                      value={form[key]}
-                      onChange={handleChange}
-                      fullWidth
-                    />
-                  </Grid>
-                ) : null
-              ))}
-            </Grid>
-            <Box mt={3} display="flex" justifyContent="flex-end">
-              <Button onClick={() => setOpen(false)} sx={{ mr: 2 }}>Cancel</Button>
-              <Button type="submit" variant="contained" color="primary">Save</Button>
-            </Box>
-          </form>
-        </Paper>
-      </Modal>
-      {/* Edit Modal */}
-      <Modal open={editOpen} onClose={() => setEditOpen(false)}>
-        <Paper sx={{ p: 4, maxWidth: 600, mx: 'auto', my: 8 }}>
-          <Typography variant="h6" mb={2}>Edit Bank Account</Typography>
-          <form onSubmit={handleEditSubmit}>
-            <Grid container spacing={2}>
-              {Object.keys(defaultBankAccount).map((key) => (
-                key !== 'CreatedOn' && key !== 'LastUpdatedOn' ? (
-                  <Grid key={key as string}>
-                    <TextField
-                      label={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                      name={key}
-                      value={form[key]}
-                      onChange={handleChange}
-                      fullWidth
-                    />
-                  </Grid>
-                ) : null
-              ))}
-            </Grid>
-            <Box mt={3} display="flex" justifyContent="flex-end">
-              <Button onClick={() => setEditOpen(false)} sx={{ mr: 2 }}>Cancel</Button>
-              <Button type="submit" variant="contained" color="primary">Save</Button>
-            </Box>
-          </form>
-        </Paper>
-      </Modal>
-    </Box>
-  );
-};
+  if (!workspacePath) {
+    console.error('Workspace path not found');
+    alert('Workspace path not found');
+    return;
+  }
+
+  try {
+    const result = await window.api.writeBankAccountFile(workspacePath, data);
+    if (result.success) {
+      console.log('Bank account data written successfully');
+    } else {
+      console.error('Failed to write bank account data:', result.error);
+    }
+  } catch (err) {
+    console.error('Error writing bank account file:', err);
+    alert('Error writing bank account file');
+  }
+}
+
+
+
+
 
 const Landing: React.FC = () => {
   const [tab, setTab] = React.useState(0);
-  const [bankData, setBankData] = React.useState<BankAccount[]>(bankAccounts);
-  const handleAddBank = (rec: BankAccount) => setBankData([...bankData, rec]);
-  const handleEditBank = (rec: BankAccount, idx: number) => {
-    setBankData(bankData.map((item, i) => (i === idx ? rec : item)));
+  const [bankData, setBankData] = React.useState<IBankAccountCredentails[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await readBankAccountDataFromStorage();
+      if (Array.isArray(data) && data.length > 0) {
+        setBankData(data);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleAddBank = (rec: IBankAccountCredentails) => {
+    const updated = [...bankData, rec];
+    setBankData(updated);
+    writeBankAccountDataToStorage(updated);
   };
+  const handleEditBank = (rec: IBankAccountCredentails, idx: number) => {
+    const updated = bankData.map((item, i) => (i === idx ? rec : item));
+    setBankData(updated);
+    writeBankAccountDataToStorage(updated);
+  };
+
   return (
     <Box sx={{ width: '100vw', height: '100vh', bgcolor: '#f5f5f5', overflow: 'auto' }}>
       <Tabs value={tab} onChange={(_e, v) => setTab(v)} centered>
@@ -224,7 +114,7 @@ const Landing: React.FC = () => {
         <Tab label="Application Credentials" />
       </Tabs>
       {tab === 0 && <BankAccountGrid onAdd={handleAddBank} onEdit={handleEditBank} bankAccounts={bankData} />}
-  {/* {tab === 1 && <AppCredentialsGrid />} */}
+      {/* {tab === 1 && <AppCredentialsGrid />} */}
     </Box>
   );
 };

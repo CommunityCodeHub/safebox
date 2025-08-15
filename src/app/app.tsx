@@ -6,6 +6,8 @@ declare global {
 		api?: {
 			registerUser: (username: string, password: string, workspacePath: string) => Promise<{ success: boolean; filePath?: string; error?: string }>;
 			readUserFile?: (username: string, password: string, workspacePath: string) => Promise<{ success: boolean; valid?: boolean; error?: string }>;
+            readBankAccountFile?: (workspacePath: string) => Promise<{ fileContent?: any; success: boolean; valid?: boolean; error?: string }>;
+            writeBankAccountFile?: (workspacePath: string, data: any) => Promise<{ success: boolean; error?: string }>;
 		};
 	}
 }
@@ -34,7 +36,7 @@ const App: React.FC = () => {
                     setLoggedIn(false);
                     sessionStorage.removeItem('IsLoggedIn');
                     sessionStorage.removeItem('LastLoggedInTime');
-                    sessionStorage.removeItem('Username');
+                    sessionStorage.removeItem('UserName');
                 }
                 else {
                     setLoggedIn(true);
@@ -64,7 +66,7 @@ const App: React.FC = () => {
 			setLoggedIn(true);
             sessionStorage.setItem('IsLoggedIn', 'true');
             sessionStorage.setItem('LastLoggedInTime', new Date().getTime().toString());
-            sessionStorage.setItem('Username', username);
+            sessionStorage.setItem('UserName', username);
 		} else {
 			setLoginError('Invalid password.');
 		}
