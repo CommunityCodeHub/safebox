@@ -31,7 +31,7 @@ const defaultBankAccount: IBankAccountCredentails = {
     LastUpdatedOn: new Date(),
 };
 
-const BankAccountGrid: React.FC<BankAccountGridProps> = ({ onAdd, onEdit, bankAccounts }) => {
+const BankAccountCredentialsComponent: React.FC<BankAccountGridProps> = ({ onAdd, onEdit, bankAccounts }) => {
   const [open, setOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [form, setForm] = React.useState<IBankAccountCredentails>({ ...defaultBankAccount });
@@ -162,4 +162,4 @@ const BankAccountGrid: React.FC<BankAccountGridProps> = ({ onAdd, onEdit, bankAc
   );
 };
 
-export default BankAccountGrid;
+export default BankAccountCredentialsComponent;

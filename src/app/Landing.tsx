@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Tabs, Tab, Typography, Button, Modal, Paper, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import BankAccountGrid from './bank-account-credentails-component';
+import BankAccountCredentialsComponent from './bank-account-credentails-component';
 import { IBankAccountCredentails } from '../entities/db-entities/bank-account-credentails';
 
 // Dummy data for demonstration
@@ -113,7 +113,7 @@ const Landing: React.FC = () => {
         <Tab label="Bank Account Credentials" />
         <Tab label="Application Credentials" />
       </Tabs>
-      {tab === 0 && <BankAccountGrid onAdd={handleAddBank} onEdit={handleEditBank} bankAccounts={bankData} />}
+      {tab === 0 && <BankAccountCredentialsComponent onAdd={handleAddBank} onEdit={handleEditBank} bankAccounts={bankData} />}
       {/* {tab === 1 && <AppCredentialsGrid />} */}
     </Box>
   );
