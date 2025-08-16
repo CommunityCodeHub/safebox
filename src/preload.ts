@@ -13,6 +13,11 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('read-bank-account-file', { workspacePath }),
   writeBankAccountFile: (workspacePath: string, data: any) =>
     ipcRenderer.invoke('write-bank-account-file', { workspacePath, data }),
+  writeApplicationCredentialsFile: (workspacePath: string, data: any) =>
+    ipcRenderer.invoke('write-application-credentials-file', { workspacePath, data }),
+  readApplicationCredentialsFile: (workspacePath: string) =>
+    ipcRenderer.invoke('read-application-credentials-file', { workspacePath }),
+  
 });
 
 

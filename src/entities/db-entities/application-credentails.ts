@@ -1,5 +1,12 @@
 
 
+export interface IApplicationCredentails {
+  ApplicationName: string;
+  UserName: string;
+  Password: string;
+  LoginUrl: string;
+  AdditionalInfo: { [key: string]: string };
+}
 
 export interface AdditionalInfo {
     [key: string]: string;
@@ -12,15 +19,7 @@ export class ApplicationCredentails {
     private _LoginUrl: string = '';
     private _addionalInfo: AdditionalInfo = {}; 
 
-    // constructor(init?: Partial<SocialMediaCredentails>) {
-    //     if (init) {
-    //         Object.keys(init).forEach(key => {
-    //             // @ts-ignore
-    //             this[key] = init[key];
-    //         });
-    //     }
-    // }
-    
+   
     constructor(){
         
     }
