@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Box, Tabs, Tab, Typography, Button, Modal, Paper, TextField } from '@mui/material';
+import React from 'react';
+import { Box, Typography, Button, Modal, Paper, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { BankAccountCredentails, IBankAccountCredentails } from '../entities/db-entities/bank-account-credentails';
+import { IBankAccountCredentails } from '../entities/db-entities/bank-account-credentails';
+import { v4 as uuidv4 } from 'uuid';
 
 interface BankAccountGridProps {
   onAdd: (rec: IBankAccountCredentails) => void;
@@ -16,19 +17,21 @@ interface BankAccountGridProps {
 }
 
 const defaultBankAccount: IBankAccountCredentails = {
-    AccountHolderName: '',
-    BankName: '',
-    AccountType: '',
-    AccountNumber: '',
-    CustomerId: '',
-    LoginId: '',
-    Password: '',
-    TransactionPassord: '',
-    AtmPin: '',
-    TPin: '',
-    NetbankingUrl: '',
-    CreatedOn: new Date(),
-    LastUpdatedOn: new Date(),
+  AccountHolderName: '',
+  BankName: '',
+  AccountType: '',
+  AccountNumber: '',
+  CustomerId: '',
+  LoginId: '',
+  Password: '',
+  TransactionPassord: '',
+  AtmPin: '',
+  TPin: '',
+  NetbankingUrl: '',
+  CreatedOn: new Date(),
+  LastUpdatedOn: new Date(),
+  RowId: uuidv4(),
+  AdditionalInfo: {}
 };
 
 const BankAccountCredentialsComponent: React.FC<BankAccountGridProps> = ({ onAdd, onEdit, bankAccounts }) => {
@@ -72,8 +75,8 @@ const BankAccountCredentialsComponent: React.FC<BankAccountGridProps> = ({ onAdd
   { field: 'CustomerId', headerName: 'Customer ID', flex: 1, filterable: true, sortable: true },
   { field: 'LoginId', headerName: 'Login ID', flex: 1, filterable: true, sortable: true },
   { field: 'NetbankingUrl', headerName: 'Netbanking URL', flex: 1 },
-  { field: 'CreatedOn', headerName: 'Created', flex: 1, filterable: true, sortable: true },
-  { field: 'LastUpdatedOn', headerName: 'Updated', flex: 1, filterable: true, sortable: true },
+  { field: 'CreatedOn', headerName: 'Created On', flex: 1, filterable: true, sortable: true },
+  { field: 'LastUpdatedOn', headerName: 'Last Updated On', flex: 1, filterable: true, sortable: true },
   {
     field: 'edit',
     headerName: 'Edit',
@@ -116,7 +119,7 @@ const BankAccountCredentialsComponent: React.FC<BankAccountGridProps> = ({ onAdd
                     <TextField
                       label={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                       name={key}
-                      value={form[key]}
+                      value={form[key as keyof IBankAccountCredentails] as string}
                       onChange={handleChange}
                       fullWidth
                     />
@@ -143,7 +146,7 @@ const BankAccountCredentialsComponent: React.FC<BankAccountGridProps> = ({ onAdd
                     <TextField
                       label={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                       name={key}
-                      value={form[key]}
+                      value={form[key as keyof IBankAccountCredentails] as string}
                       onChange={handleChange}
                       fullWidth
                     />

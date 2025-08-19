@@ -1,10 +1,10 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ApplicationCredentails, AdditionalInfo } from '../entities/db-entities/application-credentails';
+import { ApplicationCredentials } from '../entities/db-entities/application-credentails';
 
 export class ApplicationCredentailsFileManager {
-	static readFromFile(filePath: string): ApplicationCredentails[] {
+	static readFromFile(filePath: string): ApplicationCredentials[] {
 		const absolutePath = path.resolve(filePath);
 		if (!fs.existsSync(absolutePath)) {
 			throw new Error(`File not found: ${absolutePath}`);
@@ -15,17 +15,18 @@ export class ApplicationCredentailsFileManager {
 			throw new Error('JSON content is not an array');
 		}
 		return jsonArray.map((item: any) => {
-			const cred = new ApplicationCredentails();
+			const cred = new ApplicationCredentials();
+			cred.ApplicationCredentailId = item.RowId || '';
+			cred.AdditionalInfo = item.AdditionalInfo || {};
 			cred.ApplicationName = item.ApplicationName || '';
 			cred.UserName = item.UserName || '';
 			cred.Password = item.Password || '';
 			cred.LoginUrl = item.LoginUrl || '';
-			cred.AdditionalInfo = item.AdditionalInfo || {};
 			return cred;
 		});
 	}
 
-	static updateFile(filePath: string, data: ApplicationCredentails[]): void {
+	static updateFile(filePath: string, data: ApplicationCredentials[]): void {
 		const absolutePath = path.resolve(filePath);
 		fs.writeFileSync(absolutePath, JSON.stringify(data, null, 2));
 	}

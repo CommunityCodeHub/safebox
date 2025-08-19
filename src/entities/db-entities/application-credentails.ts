@@ -1,34 +1,65 @@
+import { v4 as uuidv4 } from 'uuid';
+import { IExtensibleProperties } from './extensible-properties';
 
-
-export interface IApplicationCredentails {
+export interface IApplicationCredentials {
+  ApplicationCredentailId: string;
   ApplicationName: string;
   UserName: string;
   Password: string;
   LoginUrl: string;
   AdditionalInfo: { [key: string]: string };
+  CreatedOn: Date;
+  LastUpdatedOn: Date;
+
 }
 
-export interface AdditionalInfo {
-    [key: string]: string;
-}
 
-export class ApplicationCredentails {
+
+export class ApplicationCredentials implements IApplicationCredentials {
     private _ApplicationName: string = '';
     private _UserName: string = '';
     private _Password: string = '';
     private _LoginUrl: string = '';
-    private _addionalInfo: AdditionalInfo = {}; 
+    private _rowId: string = uuidv4(); 
+    private _additionalInfo: IExtensibleProperties = {};
+    private _createdOn: Date = new Date();
+    private _lastUpdatedOn: Date = new Date();
 
    
     constructor(){
         
     }
+    // CreatedOn: Date;
+    // LastUpdatedOn: Date;
 
-    public get AdditionalInfo(): AdditionalInfo {
-        return this._addionalInfo;
+    public get CreatedOn(): Date {
+        return this._createdOn;
     }
-    public set AdditionalInfo(value: AdditionalInfo) {
-        this._addionalInfo = value;
+    public set CreatedOn(value: Date) {
+        this._createdOn = value;
+    }
+
+
+    public get LastUpdatedOn(): Date {
+        return this._lastUpdatedOn;
+    }
+    public set LastUpdatedOn(value: Date) {
+        this._lastUpdatedOn = value;
+    }
+
+
+    public get ApplicationCredentailId(): string {
+        return this._rowId;
+    }
+    public set ApplicationCredentailId(value: string) {
+        this._rowId = value;
+    }
+
+    public get AdditionalInfo(): IExtensibleProperties {
+        return this._additionalInfo;
+    }
+    public set AdditionalInfo(value: IExtensibleProperties) {
+        this._additionalInfo = value;
     }
 
 

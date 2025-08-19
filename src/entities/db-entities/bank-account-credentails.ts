@@ -1,4 +1,9 @@
+
+import { v4 as uuidv4 } from 'uuid';
+import { IExtensibleProperties } from './extensible-properties';
+
 export interface IBankAccountCredentails {
+    RowId: string, 
     AccountHolderName: string;
     BankName: string;
     AccountType: string;
@@ -12,7 +17,7 @@ export interface IBankAccountCredentails {
     NetbankingUrl: string;
     CreatedOn: Date;
     LastUpdatedOn: Date;
-    [key: string]: string | Date;
+    AdditionalInfo: IExtensibleProperties;
 }
 
 export class BankAccountCredentails implements IBankAccountCredentails {
@@ -29,11 +34,26 @@ export class BankAccountCredentails implements IBankAccountCredentails {
     private _NetbankingUrl: string = '';
     private _CreatedOn: Date = new Date();
     private _LastUpdatedOn: Date = new Date();
+    private _rowId: string = uuidv4(); 
+    private _AdditionalInfo: IExtensibleProperties = {};
 
     constructor(){}
-    [key: string]: string | Date;
-   
+      
 
+    public get RowId(): string {
+        return this._rowId;
+    }
+    public set RowId(value: string) {
+        this._rowId = value;
+    }
+
+    public get AdditionalInfo(): IExtensibleProperties {
+        return this._AdditionalInfo;
+    }
+    public set AdditionalInfo(value: IExtensibleProperties) {
+        this._AdditionalInfo = value;
+    }
+   
     public get AccountHolderName(): string {
         return this._AccountHolderName;
     }

@@ -16,6 +16,8 @@ export class BankAccountCredentailsFileManager {
 		}
 		return jsonArray.map((item: any) => {
 			const cred = new BankAccountCredentails();
+			cred.RowId = item.RowId || '';
+			cred.AdditionalInfo = item.AdditionalInfo || {};
 			cred.AccountHolderName = item.AccountHolderName || '';
 			cred.BankName = item.BankName || '';
 			cred.AccountType = item.AccountType || '';
