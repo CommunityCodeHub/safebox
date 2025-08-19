@@ -7,6 +7,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import AddAddtionalInfoComponent from '../common-components/add-additional-info-component';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ContentCopy from '@mui/icons-material/ContentCopy';
 
 interface ApplicationCredentialsComponentProps {
     onAddAppCredentails: (rec: IApplicationCredentials) => void;
@@ -44,11 +45,30 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
         value: value,
     })) : [];
 
-
+    const copyContentToClipBoard = (content: string) => {
+        navigator.clipboard.writeText(content).then(() => {
+            console.log('Content copied to clipboard');
+        }).catch((err) => {
+            console.error('Error copying content to clipboard:', err);
+        });
+    };
 
     const additionalInfoColumns = [
         { field: 'key', headerName: 'Key', flex: 1 },
-        { field: 'value', headerName: 'Value', flex: 1 },
+        { field: 'value', headerName: 'Value', flex: 1,
+            renderCell: (params: any) => (
+                <div style={{ display: 'flex' }}>
+                    <div >
+                        {params.row.value}
+                    </div>
+                    <div style={{ marginLeft: 'auto' }}>
+                        <IconButton color="secondary" title='Copy Value' onClick={() => copyContentToClipBoard(params.row.value)} aria-label="edit">
+                            <ContentCopy />
+                        </IconButton>
+                    </div>
+                </div>
+            )
+        },
         {
             field: 'modify',
             headerName: 'Modify',
@@ -62,6 +82,7 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
                     </IconButton>
                 </Box>
             ),
+            
         },
     ];
 

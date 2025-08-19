@@ -6,6 +6,7 @@ import AddApplicationCredentialsComponent from './add-application-credentails-co
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ContentCopy from '@mui/icons-material/ContentCopy';
 
 interface ApplicationCredentialsListComponentProps {
 
@@ -64,10 +65,8 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
         const appCredentialsData = await readApplicationCredentialsFromStorage();
         if (Array.isArray(appCredentialsData)) {
             setAppCredentialList(appCredentialsData);
-
             var dataRow: any;
             var rows: any = [];
-
             appCredentialsData.forEach((row: any, i: number) => {
                 dataRow = {};
                 dataRow.id = i;
@@ -77,9 +76,7 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
 
                 rows.push(dataRow);
             });
-
             setBankAccountCredentailRows(rows);
-
         }
     };
 
@@ -91,24 +88,92 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
 
     const [editApplicationCredentailsIndex, setEditApplicationCredentailsIndex] = useState<number | null>(null);
     const getAddtionalInfoPropsForDisplay = (additionalInfo: any): string => {
-       var result = ''; 
-       if (additionalInfo && typeof additionalInfo === 'object') {
-           Object.keys(additionalInfo).forEach((key) => {
-               result += `${key}: ${additionalInfo[key]},`;
-           });
-       }
-       return result; 
+        var result = '';
+        if (additionalInfo && typeof additionalInfo === 'object') {
+            Object.keys(additionalInfo).forEach((key) => {
+                result += `${key}: ${additionalInfo[key]},`;
+            });
+        }
+        return result;
+    }
+
+    const copyContentToClipBoard = (content: string) => {
+        navigator.clipboard.writeText(content).then(() => {
+            console.log('Content copied to clipboard');
+        }).catch((err) => {
+            console.error('Error copying content to clipboard:', err);
+        });
+    };
+
+    const getUrlStringForDisplay = (url: string): string => {
+        if (!url) return '';
+        if (url.length > 20) {
+            return `${url.slice(0, 20)}...`;
+        }
+        return url;
     }
 
     const getAppColumns = (onEdit: (row: IApplicationCredentials, idx: number) => void): GridColDef[] => [
         { field: 'ApplicationName', headerName: 'Application', flex: 1, filterable: true, sortable: true },
-        { field: 'UserName', headerName: 'User Name', flex: 1, filterable: true, sortable: true },
-        { field: 'Password', headerName: 'Password', flex: 1 },
-        { field: 'LoginUrl', headerName: 'Login URL', flex: 1, filterable: true, sortable: true },
+        {
+            field: 'UserName',
+            headerName: 'User Name',
+            flex: 1, filterable: true,
+            sortable: true,
+            renderCell: (params: any) => (
+                <div style={{ display: 'flex' }}>
+                    <div >
+                        {params.row.UserName}
+                    </div>
+                    <div style={{ marginLeft: 'auto' }}>
+                        <IconButton color="secondary" title='Copy User Name' onClick={() => copyContentToClipBoard(params.row.UserName)} aria-label="edit">
+                            <ContentCopy />
+                        </IconButton>
+                    </div>
+                </div>
+            )
+        },
+        {
+            field: 'Password',
+            headerName: 'Password',
+            flex: 1,
+            renderCell: (params: any) => (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div>
+                        {params.row.Password}
+                    </div>
+                    <div style={{ marginLeft: 'auto' }}>
+                        <IconButton color="secondary" title='Copy Password' onClick={() => copyContentToClipBoard(params.row.Password)} aria-label="edit">
+                            <ContentCopy />
+                        </IconButton>
+                    </div>
+                </div>
+            )
+        },
+        { 
+            field: 'LoginUrl', 
+            headerName: 'Login URL', 
+            flex: 1, 
+            filterable: true, 
+            sortable: true,
+            renderCell: (params: any) => (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div>
+                        {getUrlStringForDisplay(params.row.LoginUrl)}
+                    </div>
+                    <div style={{ marginLeft: 'auto' }}>
+                        <IconButton color="secondary" title='Copy Login URL' onClick={() => copyContentToClipBoard(params.row.LoginUrl)} aria-label="edit">
+                            <ContentCopy />
+                        </IconButton>
+                    </div>
+                </div>
+                
+            )
+        },
         {
             field: 'AdditionalInfo', headerName: 'Additional Info', flex: 1, filterable: true, sortable: true,
             renderCell: (params: any) => (
-                <div > 
+                <div >
                     {getAddtionalInfoPropsForDisplay(params.row.AdditionalInfo)}
                 </div>
             )
@@ -123,10 +188,10 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
             filterable: false,
             renderCell: (params: any) => (
                 <Box>
-                    <IconButton color="primary" onClick={() => openEditApplicationCredentailsModal(params.row, params.row.id)} aria-label="edit">
+                    <IconButton color="primary" title='Edit this Application Credential' onClick={() => openEditApplicationCredentailsModal(params.row, params.row.id)} aria-label="edit">
                         <EditIcon />
                     </IconButton>
-                    <IconButton color="error" onClick={() => deleteApplicationCredentailRow(params.row, params.row.id)} aria-label="delete">
+                    <IconButton color="error" title='Delete this Application Credential' onClick={() => deleteApplicationCredentailRow(params.row, params.row.id)} aria-label="delete">
                         <DeleteIcon />
                     </IconButton>
                 </Box>
