@@ -16,43 +16,25 @@ if (require('electron-squirrel-startup')) {
 let mainWindow: BrowserWindow | null = null;
 let loginWindow: BrowserWindow | null = null;
 
+const path = require('path');
 const createMainWindow = (): void => {
   mainWindow = new BrowserWindow({
     show: false,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
+    autoHideMenuBar: true,
+    icon: path.join(__dirname, "assets", "images", 'safebox.png'),
+    title: "SafeBox"
+    
   });
   mainWindow.maximize();
   mainWindow.show();
+
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   mainWindow.webContents.openDevTools();
 };
 
-const createLoginWindow = (): void => {
-  loginWindow = new BrowserWindow({
-    show: false,
-    resizable: false,
-    frame: true,
-    modal: true,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: true,
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    },
-  });
-  loginWindow.maximize();
-  loginWindow.show();
-  loginWindow.loadFile('src/login.html');
-  
-  loginWindow.on('closed', () => {
-    loginWindow = null;
-  });
-
-  // loginWindow.on('ready-to-show', () => {
-  //   registerLoginFunctions(); 
-  // });
-};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
