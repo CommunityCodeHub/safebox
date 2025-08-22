@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
-import BankAccountCredentialsComponent from './bank-account-credentails-component';
+//import BankAccountCredentialsComponent from './bank-account-credentails-component';
+import BankAccountCredentialListComponent from './bank-account-credentail-components/bank-account-credentails-list-component';
 import { IBankAccountCredentails } from '../entities/db-entities/bank-account-credentails';
 import ApplicationCredentialsListComponent from './application-credentail-components/application-credentails-list-component';
 import { IApplicationCredentials } from '../entities/db-entities/application-credentails';
@@ -11,7 +12,7 @@ async function readBankAccountDataFromStorage(): Promise<IBankAccountCredentails
   if (!workspacePath) return [];
 
   try {
-    const result = await window.api.readBankAccountFile(workspacePath);
+    const result = await window.api.readBankAccountCredentialsFile(workspacePath);
     if (result.success) {
       return result.fileContent as IBankAccountCredentails[];
     } else {
@@ -56,7 +57,7 @@ async function writeBankAccountDataToStorage(data: IBankAccountCredentails[]): P
   }
 
   try {
-    const result = await window.api.writeBankAccountFile(workspacePath, data);
+    const result = await window.api.writeBankAccountCredentialsFile(workspacePath, data);
     if (result.success) {
       console.log('Bank account data written successfully');
     } else {
@@ -139,7 +140,7 @@ const Landing: React.FC = () => {
         <Tab label="Bank Account Credentials" />
         <Tab label="Application Credentials" />
       </Tabs>
-      {tab === 0 && <BankAccountCredentialsComponent onAdd={handleAddBankCredentails} onEdit={handleEditBankCredentails} bankAccounts={bankData} />}
+      {tab === 0 && <BankAccountCredentialListComponent />}
       {tab === 1 && <ApplicationCredentialsListComponent />}
     </Box>
   );

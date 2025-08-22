@@ -2,146 +2,61 @@
 import { v4 as uuidv4 } from 'uuid';
 import { IExtensibleProperties } from './extensible-properties';
 
-export interface IBankAccountCredentails {
-    RowId: string, 
-    AccountHolderName: string;
+export enum AccountType {
+        Savings = 'Savings',
+        Current = 'Current',
+        FixedDeposit = 'Fixed Deposit',
+        RecurringDeposit = 'Recurring Deposit',
+        MutualFund = "Mutual Fund"
+}
+
+export interface IBasicAccountDetails {
+    NetbankingUrl: unknown;
+    TransactionPassword: unknown;
+    Password: unknown;
+    LoginId: unknown;
+    ApplicationName: string;
     BankName: string;
-    AccountType: string;
+    AccountHolderName: string;
+    AccountType: AccountType | string;
+    OtherAccountType: string;
     AccountNumber: string;
-    CustomerId: string;
-    LoginId: string;
-    Password: string;
-    TransactionPassord: string;
-    AtmPin: string;
-    TPin: string;
-    NetbankingUrl: string;
+    CustomerId: string; 
+    TelephoneBankingPin: string;
+}        
+
+export interface IBankAccountCredentails {
+    BasicAccountDetails: IBasicAccountDetails;
+    AdditionalInfo: IExtensibleProperties;
+    CreditCardDetails: ICardDetails[];
+    DebitCardDetails: ICardDetails[];
+    CreatedOn: Date;
+    LastUpdatedOn: Date;
+}
+
+export interface ICardDetails{
+    CardName: string;
+    CardHolderName: string;
+    CardNumber: string;
+    ExpiryDate: string;
+    CVV: string;
+    IssuingBank: string;
     CreatedOn: Date;
     LastUpdatedOn: Date;
     AdditionalInfo: IExtensibleProperties;
+    Pin: string
 }
 
+
 export class BankAccountCredentails implements IBankAccountCredentails {
-    private _AccountHolderName: string = '';
-    private _BankName: string = '';
-    private _AccountType: string = '';
-    private _AccountNumber: string = '';
-    private _CustomerId: string = '';
-    private _LoginId: string = '';
-    private _Password: string = '';
-    private _TransactionPassord: string = '';
-    private _AtmPin: string = '';
-    private _TPin: string = '';
-    private _NetbankingUrl: string = '';
-    private _CreatedOn: Date = new Date();
-    private _LastUpdatedOn: Date = new Date();
-    private _rowId: string = uuidv4(); 
-    private _AdditionalInfo: IExtensibleProperties = {};
+    constructor(
+        
+    ) {}
 
-    constructor(){}
-      
-
-    public get RowId(): string {
-        return this._rowId;
-    }
-    public set RowId(value: string) {
-        this._rowId = value;
-    }
-
-    public get AdditionalInfo(): IExtensibleProperties {
-        return this._AdditionalInfo;
-    }
-    public set AdditionalInfo(value: IExtensibleProperties) {
-        this._AdditionalInfo = value;
-    }
-   
-    public get AccountHolderName(): string {
-        return this._AccountHolderName;
-    }
-    public set AccountHolderName(value: string) {
-        this._AccountHolderName = value;
-    }
-
-    public get BankName(): string {
-        return this._BankName;
-    }
-    public set BankName(value: string) {
-        this._BankName = value;
-    }
-
-    public get AccountType(): string {
-        return this._AccountType;
-    }
-    public set AccountType(value: string) {
-        this._AccountType = value;
-    }
-
-    public get AccountNumber(): string {
-        return this._AccountNumber;
-    }
-    public set AccountNumber(value: string) {
-        this._AccountNumber = value;
-    }
-
-    public get CustomerId(): string {
-        return this._CustomerId;
-    }
-    public set CustomerId(value: string) {
-        this._CustomerId = value;
-    }
-
-    public get LoginId(): string {
-        return this._LoginId;
-    }
-    public set LoginId(value: string) {
-        this._LoginId = value;
-    }
-
-    public get Password(): string {
-        return this._Password;
-    }
-    public set Password(value: string) {
-        this._Password = value;
-    }
-
-    public get TransactionPassord(): string {
-        return this._TransactionPassord;
-    }
-    public set TransactionPassord(value: string) {
-        this._TransactionPassord = value;
-    }
-
-    public get AtmPin(): string {
-        return this._AtmPin;
-    }
-    public set AtmPin(value: string) {
-        this._AtmPin = value;
-    }
-
-    public get TPin(): string {
-        return this._TPin;
-    }
-    public set TPin(value: string) {
-        this._TPin = value;
-    }
-
-    public get NetbankingUrl(): string {
-        return this._NetbankingUrl;
-    }
-    public set NetbankingUrl(value: string) {
-        this._NetbankingUrl = value;
-    }
-
-    public get CreatedOn(): Date {
-        return this._CreatedOn;
-    }
-    public set CreatedOn(value: Date) {
-        this._CreatedOn = value;
-    }
-
-    public get LastUpdatedOn(): Date {
-        return this._LastUpdatedOn;
-    }
-    public set LastUpdatedOn(value: Date) {
-        this._LastUpdatedOn = value;
-    }
+        public BasicAccountDetails: IBasicAccountDetails;
+        public AdditionalInfo: IExtensibleProperties;
+        public CreditCardDetails: ICardDetails[];
+        public DebitCardDetails: ICardDetails[];
+        public CreatedOn: Date;
+        public LastUpdatedOn: Date;
 }

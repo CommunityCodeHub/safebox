@@ -16,19 +16,10 @@ export class BankAccountCredentailsFileManager {
 		}
 		return jsonArray.map((item: any) => {
 			const cred = new BankAccountCredentails();
-			cred.RowId = item.RowId || '';
 			cred.AdditionalInfo = item.AdditionalInfo || {};
-			cred.AccountHolderName = item.AccountHolderName || '';
-			cred.BankName = item.BankName || '';
-			cred.AccountType = item.AccountType || '';
-			cred.AccountNumber = item.AccountNumber || '';
-			cred.CustomerId = item.CustomerId || '';
-			cred.LoginId = item.LoginId || '';
-			cred.Password = item.Password || '';
-			cred.TransactionPassord = item.TransactionPassord || '';
-			cred.AtmPin = item.AtmPin || '';
-			cred.TPin = item.TPin || '';
-			cred.NetbankingUrl = item.NetbankingUrl || '';
+			cred.BasicAccountDetails = item.BasicAccountDetails || {};
+			cred.CreditCardDetails = item.CreditCardDetails || [];
+			cred.DebitCardDetails = item.DebitCardDetails || [];
 			cred.CreatedOn = item.CreatedOn ? new Date(item.CreatedOn) : new Date();
 			cred.LastUpdatedOn = item.LastUpdatedOn ? new Date(item.LastUpdatedOn) : new Date();
 			return cred;

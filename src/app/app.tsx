@@ -6,8 +6,8 @@ declare global {
 		api?: {
 			registerUser: (username: string, password: string, workspacePath: string) => Promise<{ success: boolean; filePath?: string; error?: string }>;
 			readUserFile?: (username: string, password: string, workspacePath: string) => Promise<{ success: boolean; valid?: boolean; error?: string }>;
-            readBankAccountFile?: (workspacePath: string) => Promise<{ fileContent?: any; success: boolean; valid?: boolean; error?: string }>;
-            writeBankAccountFile?: (workspacePath: string, data: any) => Promise<{ success: boolean; error?: string }>;
+            readBankAccountCredentialsFile?: (workspacePath: string) => Promise<{ fileContent?: any; success: boolean; valid?: boolean; error?: string }>;
+            writeBankAccountCredentialsFile?: (workspacePath: string, data: any) => Promise<{ success: boolean; error?: string }>;
 			readApplicationCredentialsFile?: (workspacePath: string) => Promise<{ fileContent?: any; success: boolean; valid?: boolean; error?: string }>;
 			writeApplicationCredentialsFile?: (workspacePath: string, data: any) => Promise<{ success: boolean; error?: string }>;
 		};

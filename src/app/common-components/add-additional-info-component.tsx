@@ -10,11 +10,7 @@ const AddAddtionalInfoComponent: React.FC<ApplicationCredentialsComponentProps> 
     const [key, setKey] = useState('');
     const [value, setValue] = useState('');
 
-    // const handleAdd = () => {
-    //     props.onAddAddtionalinfo(key, value);
-    //     setKey('');
-    //     setValue('');
-    // };
+    
 
     const onAddUpdateClick = (evt:any) => {
         props.onAddAddtionalinfo(key, value);

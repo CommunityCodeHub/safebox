@@ -6,7 +6,7 @@ const bankAccountFileName = 'H0DTaUDYeyXGBEdah2RVHxynhhJJLJ';
 //const applicationCredentailsFileName = "CLvKUfVgJGZafTkuQTLmikuQuFDzFk";
 const applicationCredentailsFileName = "appcredentials.json";
 
-ipcMain.handle('read-bank-account-file', async (_event, { workspacePath }) => {
+ipcMain.handle('read-bank-account-credentials-file', async (_event, { workspacePath }) => {
   try {
     
     const filePath = path.join(workspacePath, bankAccountFileName);
@@ -41,7 +41,7 @@ ipcMain.handle('read-application-credentials-file', async (_event, { workspacePa
   }
 });
 
-ipcMain.handle('write-bank-account-file', async (_event, { workspacePath, data }) => {
+ipcMain.handle('write-bank-account-credentials-file', async (_event, { workspacePath, data }) => {
     try {
         const filePath = path.join(workspacePath, bankAccountFileName);
         const encryptedData = safeStorage.encryptString(JSON.stringify(data)).toString('base64');

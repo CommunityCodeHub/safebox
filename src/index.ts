@@ -23,7 +23,7 @@ const createMainWindow = (): void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
-    autoHideMenuBar: true,
+    autoHideMenuBar: false,
     icon: path.join(__dirname, "assets", "images", 'safebox.png'),
     title: "SafeBox"
     
