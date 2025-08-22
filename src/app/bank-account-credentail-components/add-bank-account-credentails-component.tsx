@@ -152,18 +152,20 @@ const AddBankAccountCredentialsComponent: React.FC<IAddBankAccountCredentialsCom
         <Paper sx={{ p: 4, width: '65vw', height: '65vh', mx: 'auto', my: 8, border: '1px solid #eee' }}>
             <Typography variant="h6" mb={2}>Add Bank Account Details</Typography>
             <form onSubmit={onFormSubmit}>
-                <Box sx={{  overflow: 'auto', paddingTop:2 }}>
-                      <Tabs sx={{ bgcolor: '#f5f5f5', paddingTop:2 }} value={tab} onChange={(_e, v) => setTab(v)} centered>
+                <Box sx={{ overflow: 'auto', paddingTop: 2 }}>
+                    <Tabs sx={{ bgcolor: '#f5f5f5' }} value={tab} onChange={(_e, v) => setTab(v)} centered>
                         <Tab label="Basic Details" />
                         <Tab label="Additional Info" />
                         <Tab label="Debit Card Info" />
                         <Tab label="Credit Card Info" />
-                      </Tabs>
-                      {tab === 0 && <BasicDetailsComponent BasicAccountDetails={bankAccountCredentails.BasicAccountDetails} onBasicAccountDetailsChange={onBasicAccountDetailsChange} onCancelAddBankAccountCredentials={onCancelAddBankAccountCredentials} onNextButtonClick={onNextButtonClick} />}
-                      {tab === 1 && <AdditionalInfoListComponent additionalInfo={bankAccountCredentails.AdditionalInfo} onAdditionalInfoUpdate={onAdditionalInfoUpdate} />}
-                      {tab === 2 && <CardDetailsComponent cardDetails={bankAccountCredentails.CreditCardDetails} onListUpdate={onCreditCardListUpdate} />}
-                      {tab === 3 && <CardDetailsComponent cardDetails={bankAccountCredentails.DebitCardDetails} onListUpdate={onDebitCardListUpdate} />}
+                    </Tabs>
+                    <Box sx={{ mt: 3, bgcolor: '#fff', border: '1px inset #ccc', borderRadius: 2, p: 1, minHeight: 320 }}>
+                        {tab === 0 && <BasicDetailsComponent BasicAccountDetails={bankAccountCredentails.BasicAccountDetails} onBasicAccountDetailsChange={onBasicAccountDetailsChange} onCancelAddBankAccountCredentials={onCancelAddBankAccountCredentials} onNextButtonClick={onNextButtonClick} />}
+                        {tab === 1 && <AdditionalInfoListComponent additionalInfo={bankAccountCredentails.AdditionalInfo} onAdditionalInfoUpdate={onAdditionalInfoUpdate} />}
+                        {tab === 2 && <CardDetailsComponent cardDetails={bankAccountCredentails.CreditCardDetails} onListUpdate={onCreditCardListUpdate} />}
+                        {tab === 3 && <CardDetailsComponent cardDetails={bankAccountCredentails.DebitCardDetails} onListUpdate={onDebitCardListUpdate} />}
                     </Box>
+                </Box>
             </form>
         </Paper>
     )
