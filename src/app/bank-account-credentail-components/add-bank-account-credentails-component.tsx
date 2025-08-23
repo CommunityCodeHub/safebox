@@ -1,5 +1,5 @@
 import { AccountType, IBankAccountCredentails, IBasicAccountDetails, ICardDetails } from "../../entities/db-entities/bank-account-credentails";
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Box, Typography, Button, Modal, Paper, TextField, Grid, Select, MenuItem, Tabs, Tab } from '@mui/material';
 import { IApplicationCredentials } from '../../entities/db-entities/application-credentails';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,7 +24,16 @@ interface IAddBankAccountCredentialsComponentProps {
 const AddBankAccountCredentialsComponent: React.FC<IAddBankAccountCredentialsComponentProps> = (props) => {
     // Component implementation
 
+    const BasicDetailsComponentRef = useRef(null);
+
     const onFormSubmit = (evt: any) => {
+        //bankAccountCredentails 
+        if (props.mode == 'add'){
+            props.onAddBankAccountCredentials(bankAccountCredentails);
+        }
+        else {
+            props.onEditBankAccountCredentials(bankAccountCredentails);
+        }
         evt.preventDefault();
     }
 
@@ -128,22 +137,25 @@ const AddBankAccountCredentialsComponent: React.FC<IAddBankAccountCredentialsCom
     };
     const [tab, setTab] = React.useState(0);
 
-    function onBasicAccountDetailsChange(e: IBasicAccountDetails): void {
+    const onBasicAccountDetailsChange = (e: IBasicAccountDetails): void => {
         bankAccountCredentails.BasicAccountDetails = e;
         setBankAccountCredentails({ ...bankAccountCredentails });
-    }
+    };
 
-    function onNextButtonClick(): void {
+    const onNextButtonClick = (): void => {
+        if(BasicDetailsComponentRef.current) {
+            const updatedDetails = BasicDetailsComponentRef.current.getUpdatedBasicAccountDetails();
+            onBasicAccountDetailsChange(updatedDetails);
+        }
         setTab(tab < 3 ? tab + 1 : tab);
     }
 
-    function onCreditCardListUpdate(details: ICardDetails[]): void {
-        //throw new Error("Function not implemented.");
+    const onCreditCardListUpdate = (details: ICardDetails[]): void => {
         bankAccountCredentails.CreditCardDetails = details;
         setBankAccountCredentails({ ...bankAccountCredentails });
-    }
+    };
 
-    function onDebitCardListUpdate(details: ICardDetails[]): void {
+    const onDebitCardListUpdate = (details: ICardDetails[]): void => {
         bankAccountCredentails.DebitCardDetails = details;
         setBankAccountCredentails({ ...bankAccountCredentails });
     }
@@ -160,11 +172,20 @@ const AddBankAccountCredentialsComponent: React.FC<IAddBankAccountCredentialsCom
                         <Tab label="Credit Card Info" />
                     </Tabs>
                     <Box sx={{ mt: 3, bgcolor: '#fff', border: '1px inset #ccc', borderRadius: 2, p: 1, minHeight: 320 }}>
-                        {tab === 0 && <BasicDetailsComponent BasicAccountDetails={bankAccountCredentails.BasicAccountDetails} onBasicAccountDetailsChange={onBasicAccountDetailsChange} onCancelAddBankAccountCredentials={onCancelAddBankAccountCredentials} onNextButtonClick={onNextButtonClick} />}
+                        {tab === 0 && <BasicDetailsComponent ref={BasicDetailsComponentRef} BasicAccountDetails={bankAccountCredentails.BasicAccountDetails}  />}
                         {tab === 1 && <AdditionalInfoListComponent additionalInfo={bankAccountCredentails.AdditionalInfo} onAdditionalInfoUpdate={onAdditionalInfoUpdate} />}
                         {tab === 2 && <CardDetailsComponent cardDetails={bankAccountCredentails.CreditCardDetails} onListUpdate={onCreditCardListUpdate} />}
                         {tab === 3 && <CardDetailsComponent cardDetails={bankAccountCredentails.DebitCardDetails} onListUpdate={onDebitCardListUpdate} />}
                     </Box>
+                </Box>
+                <Box mt={3} display="flex" justifyContent="flex-end" gap={2}>
+                    <Button onClick={() => props.onCancelAddBankAccountCredentials()} variant="contained" color="secondary">Cancel</Button>
+                    <Button type="button" variant="contained" color="primary" disabled={tab === 0} onClick={() => setTab(tab - 1)}>Previous</Button>
+                    {tab !== 3 ? (
+                        <Button type="button" variant="contained" color="primary" onClick={onNextButtonClick}>Next</Button>
+                    ) : (
+                        <Button type="button" variant="contained" color="primary" onClick={onFormSubmit}>Submit</Button>
+                    )}
                 </Box>
             </form>
         </Paper>

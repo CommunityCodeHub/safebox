@@ -78,7 +78,7 @@ const AdditionalInfoListComponent: React.FC<IAddtionalInfoListComponentProps> = 
 
     return (
         <Grid sx={{ width: '100%', paddingTop: 1 }}>
-            <Box display="flex" justifyContent="flex-end" mb={2}>
+            <Box display="flex" justifyContent="flex-end">
                 <Button variant="contained" color="secondary" sx={{ width: 120, maxHeight: 30 }} onClick={() => setAddAddtionalInfoModalOpen(true)}>
                     Add New
                 </Button>

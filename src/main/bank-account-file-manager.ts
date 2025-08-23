@@ -15,7 +15,8 @@ ipcMain.handle('read-bank-account-credentials-file', async (_event, { workspaceP
     }
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     
-    const fileDataJson = safeStorage.decryptString(Buffer.from(fileContent, 'base64'));
+    //const fileDataJson = safeStorage.decryptString(Buffer.from(fileContent, 'base64'));
+    const fileDataJson = fileContent; 
     return {fileContent: JSON.parse(fileDataJson), success: true, valid: true };
 
   } catch (err) {
@@ -44,7 +45,8 @@ ipcMain.handle('read-application-credentials-file', async (_event, { workspacePa
 ipcMain.handle('write-bank-account-credentials-file', async (_event, { workspacePath, data }) => {
     try {
         const filePath = path.join(workspacePath, bankAccountFileName);
-        const encryptedData = safeStorage.encryptString(JSON.stringify(data)).toString('base64');
+        //const encryptedData = safeStorage.encryptString(JSON.stringify(data)).toString('base64');
+        const encryptedData = JSON.stringify(data);
         fs.writeFileSync(filePath, encryptedData, 'utf-8');
 
         return { success: true };

@@ -23,7 +23,11 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
     };
     const [cardDetailsObject, setCardDetailsObject] = React.useState<ICardDetails | null>(props.cardDetails || defaultCardDetails);
     const onHtmlInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name } = e.target;
+        let value = e.target.value;
+        if (name === 'CVV' || name === 'Pin') {
+            value = value.replace(/[^\d]/g, '');
+        }
         setCardDetailsObject((prev) => (prev ? { ...prev, [name]: value } : null));
     };
 
@@ -90,12 +94,12 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                 </Grid>
                 <Grid>
                     <TextField
-                        label="Expiry Date (MM/YYYY)"
+                        label="Expiry Date (MM/YY)"
                         name="ExpiryDate"
-                        placeholder="MM/YYYY"
+                        placeholder="MM/YY"
                         value={cardDetailsObject.ExpiryDate}
                         onChange={(e) => {
-                            // Only allow MM/YYYY format
+                            // Only allow MM/YY format
                             let value = e.target.value;
                             // Remove non-digits except '/'
                             value = value.replace(/[^\d/]/g, '');
@@ -103,14 +107,14 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                             if (value.length === 2 && !value.includes('/')) {
                                 value = value + '/';
                             }
-                            // Limit to 7 chars (MM/YYYY)
-                            if (value.length > 7) value = value.slice(0, 7);
+                            // Limit to 5 chars (MM/YY)
+                            if (value.length > 5) value = value.slice(0, 5);
                             setCardDetailsObject((prev) => (prev ? { ...prev, ExpiryDate: value } : null));
                         }}
                         required
                         fullWidth
                         size="small"
-                        inputProps={{ maxLength: 7 }}
+                        inputProps={{ maxLength: 5 }}
                     />
                 </Grid>
                 <Grid>
@@ -122,7 +126,7 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                         required
                         fullWidth
                         size="small"
-                        inputProps={{ maxLength: 4 }}
+                        inputProps={{ maxLength: 4, inputMode: 'numeric', pattern: '[0-9]*' }}
                     />
                 </Grid>
                 <Grid>
@@ -140,17 +144,18 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                     <TextField
                         label="PIN"
                         name="Pin"
-                        type="number"
                         value={cardDetailsObject.Pin}
                         onChange={onHtmlInputChange}
                         required
                         fullWidth
                         size="small"
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     />
                 </Grid>
                 {/* AdditionalInfo can be handled with a custom component if needed */}
             </Grid>
-            <Box mt={3} display="flex" justifyContent="flex-end">
+            <Box mt={3} display="flex" justifyContent="flex-end" gap={2}>
+                <Button type="button" variant="outlined" color="secondary" onClick={props.onClose}>Cancel</Button>
                 <Button type="button" variant="contained" color="primary" onClick={onSaveCardDetails}>Save</Button>
             </Box>
 

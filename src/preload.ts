@@ -17,7 +17,9 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('write-application-credentials-file', { workspacePath, data }),
   readApplicationCredentialsFile: (workspacePath: string) =>
     ipcRenderer.invoke('read-application-credentials-file', { workspacePath }),
-  
+  openExternal: (url: string) =>
+    ipcRenderer.invoke('open-external', { url }),
+
 });
 
 

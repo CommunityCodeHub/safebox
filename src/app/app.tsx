@@ -10,6 +10,7 @@ declare global {
             writeBankAccountCredentialsFile?: (workspacePath: string, data: any) => Promise<{ success: boolean; error?: string }>;
 			readApplicationCredentialsFile?: (workspacePath: string) => Promise<{ fileContent?: any; success: boolean; valid?: boolean; error?: string }>;
 			writeApplicationCredentialsFile?: (workspacePath: string, data: any) => Promise<{ success: boolean; error?: string }>;
+			openExternal: (url: string) => Promise<void>;
 		};
 	}
 }

@@ -7,15 +7,39 @@ interface ApplicationCredentialsComponentProps {
 }
 
 const AddAddtionalInfoComponent: React.FC<ApplicationCredentialsComponentProps> = (props) => {
+
     const [key, setKey] = useState('');
     const [value, setValue] = useState('');
+    const [keyError, setKeyError] = useState('');
 
-    
+    const validateKey = (val: string) => {
+        if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(val)) {
+            if (!/^[A-Za-z]/.test(val)) {
+                return 'Key must start with an alphabet.';
+            }
+            if (/\s/.test(val)) {
+                return 'Key cannot contain spaces.';
+            }
+            if (/[^A-Za-z0-9_]/.test(val)) {
+                return 'Key cannot contain special characters.';
+            }
+            return 'Key must contain only letters, numbers, or underscores.';
+        }
+        return '';
+    };
 
-    const onAddUpdateClick = (evt:any) => {
+    const onKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setKey(val);
+        setKeyError(validateKey(val));
+    };
+
+    const onAddUpdateClick = (evt: any) => {
+        if (keyError || !key) return;
         props.onAddAddtionalinfo(key, value);
         setKey('');
         setValue('');
+        setKeyError('');
         props.onClose();
     };
 
@@ -27,9 +51,11 @@ const AddAddtionalInfoComponent: React.FC<ApplicationCredentialsComponentProps> 
                 <TextField
                     label="Key"
                     value={key}
-                    onChange={e => setKey(e.target.value)}
+                    onChange={onKeyChange}
                     required
                     autoFocus
+                    error={!!keyError}
+                    helperText={keyError}
                 />
                 <TextField
                     label="Value"
@@ -38,8 +64,8 @@ const AddAddtionalInfoComponent: React.FC<ApplicationCredentialsComponentProps> 
                     required
                 />
                 <Box display="flex" justifyContent="flex-end" gap={1}>
-                    <Button type="button" onClick={props.onClose}>Cancel</Button>
-                    <Button type="button" onClick={onAddUpdateClick}>Add</Button>
+                    <Button type="button" onClick={props.onClose} variant="outlined" color="secondary">Cancel</Button>
+                    <Button type="button" onClick={onAddUpdateClick} variant="contained" color="primary" disabled={!!keyError || !key}>Add</Button>
                 </Box>
             </Box>
         </Paper>

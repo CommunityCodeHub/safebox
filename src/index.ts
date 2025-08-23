@@ -71,4 +71,5 @@ app.on('activate', () => {
 import './main/userRegistration';
 import './main/userLogin';
 import './main/bank-account-file-manager';
+import './main/utils-functions'; 
 
