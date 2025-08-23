@@ -6,10 +6,6 @@ import { AccountType, IBasicAccountDetails } from "../../entities/db-entities/ba
 
 interface IBasicDetailsComponentProps {
     BasicAccountDetails: IBasicAccountDetails;
-    //onBasicAccountDetailsChange: (e: IBasicAccountDetails) => void;
-    //onCancelAddBankAccountCredentials: () => void;
-    //onNextButtonClick: () => void;
-
 }
 
 export interface BasicDetailsComponentHandle {
@@ -80,11 +76,10 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
 
     return (
         <div>
-            <Grid container spacing={2} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
+            <Grid container spacing={2} sx={{ flexDirection: { xs: 'column', md: 'row' }, width: '100%', paddingTop: 2 }}>
                 {/* Main fields in two columns */}
                 <Grid sx={{ flex: 1 }}>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Bank Name</Typography>
                         <TextField
                             label="Bank Name"
                             name="BankName"
@@ -95,7 +90,6 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                             sx={{ flex: 1 }} />
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Account Holder Name</Typography>
                         <TextField
                             label="Account Holder Name"
                             name="AccountHolderName"
@@ -106,7 +100,6 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                             sx={{ flex: 1 }} />
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Account Type</Typography>
                         <Select
                             label="Account Type"
                             name="AccountType"
@@ -134,7 +127,6 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                         )}
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Account Number</Typography>
                         <TextField
                             label="Account Number"
                             name="AccountNumber"
@@ -147,7 +139,6 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                         />
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Customer Id</Typography>
                         <TextField
                             label="Customer Id"
                             name="CustomerId"
@@ -162,7 +153,6 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                 </Grid>
                 <Grid sx={{ flex: 1 }}>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Login Id</Typography>
                         <TextField
                             label="Login Id"
                             name="LoginId"
@@ -173,7 +163,6 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                             sx={{ flex: 1 }} />
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Password</Typography>
                         <TextField
                             label="Password"
                             name="Password"
@@ -199,7 +188,7 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                         />
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Transaction Password</Typography>
+                        
                         <TextField
                             label="Transaction Password"
                             name="TransactionPassword"
@@ -225,7 +214,7 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                         />
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Netbanking Url</Typography>
+                        
                         <TextField
                             label="NetbankingUrl"
                             name="NetbankingUrl"
@@ -239,7 +228,6 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                         />
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Typography variant="subtitle2" sx={{ minWidth: 140, mr: 2 }}>Telephone Banking PIN</Typography>
                         <TextField
                             label="Telephone Banking PIN"
                             name="TelephoneBankingPin"
@@ -254,10 +242,7 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                 </Grid>
 
             </Grid>
-            {/* <Box mt={3} display="flex" justifyContent="flex-end">
-                <Button onClick={() => props.onCancelAddBankAccountCredentials()} sx={{ mr: 2 }}>Cancel</Button>
-                <Button type="button" variant="contained" color="primary" onClick={onNextButtonClick}>Next</Button>
-            </Box> */}
+
         </div>
 
     )

@@ -1,20 +1,12 @@
-// CopyCell component for CustomerId with copy button
-
-
-// MaskedCell component for password fields with show/hide and copy
-
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Modal, Paper, TextField, IconButton, Tooltip } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import ContentCopy from '@mui/icons-material/ContentCopy';
-import Grid from '@mui/material/Grid';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { IBankAccountCredentails } from '../../entities/db-entities/bank-account-credentails';
-import { v4 as uuidv4 } from 'uuid';
 import AddBankAccountCredentialsComponent from './add-bank-account-credentails-component';
 import CopyCell from '../common-components/copy-cell-component';
 import MaskedCell from '../common-components/masked-cell-component';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 interface IBankAccountCredentialsListComponentProps {
@@ -66,9 +58,9 @@ async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentail
 
 const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListComponentProps> = () => {
     const getBankAccountColumns = (onEdit: (row: IBankAccountCredentails, idx: number) => void): GridColDef[] => [
-        { field: 'AccountHolderName', headerName: 'Account Holder', flex: 1, filterable: true, sortable: true },
-        { field: 'BankName', headerName: 'Bank', flex: 1, filterable: true, sortable: true },
-        { field: 'AccountType', headerName: 'Type', flex: 1, filterable: true, sortable: true },
+        { field: 'AccountHolderName', headerName: 'Account Holder', flex: 0.75, filterable: true, sortable: true },
+        { field: 'BankName', headerName: 'Bank', flex: 0.5, filterable: true, sortable: true },
+        { field: 'AccountType', headerName: 'Type', flex: 0.5, filterable: true, sortable: true },
         { field: 'AccountNumber', headerName: 'Account #', flex: 1, filterable: true, sortable: true },
         {
             field: 'CustomerId',
@@ -124,15 +116,20 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
         { field: 'AdditionalInfo', headerName: 'Additional Info', flex: 1 },
         { field: 'LastUpdatedOn', headerName: 'Last Updated On', flex: 1, filterable: true, sortable: true },
         {
-            field: 'edit',
-            headerName: 'Edit',
+            field: 'modify',
+            headerName: 'Modify',
             flex: 0.5,
             sortable: false,
             filterable: false,
             renderCell: (params: any) => (
-                <Button variant="text" color="primary" onClick={() => onEdit(bankAccountCredentialRows[params.row.id], params.row.id)}>
-                    Edit
-                </Button>
+                <Box display="flex">
+                    <IconButton color="primary" title='Edit this Application Credential' onClick={() => onEditBankAccountDetails(params.row.id)} aria-label="edit">
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton color="error" title='Delete this Application Credential' onClick={() => onDeleteBankAccountDetails(params.row, params.row.id)} aria-label="delete">
+                        <DeleteIcon />
+                    </IconButton>
+                </Box>
             ),
         },
     ];
@@ -173,6 +170,22 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
         setAddBankAccountCredentailModelDialogOpen(false);
     }
 
+    const onDeleteBankAccountDetails = async (rec: IBankAccountCredentails, idx: number): Promise<void> => {
+        var result = window.confirm("Are you sure you want to delete this bank account details?");
+        if (!result) return;
+
+        var bankAccountCredentails = bankAccountDetailsList;
+        bankAccountCredentails.splice(idx, 1);
+        setBankAccountDetailsList([...bankAccountCredentails]);
+        await writeBankAccountCredentialsToStorage(bankAccountCredentails);
+        await fetchBankAccountCredentailsData();
+    };
+
+    const onEditBankAccountDetails = (idx: number) => {
+        var rows = bankAccountDetailsList.filter((item: any)=>item.id == idx); 
+        openEditBankAccountCredentailsModal(rows[0], idx);
+    };
+
     const fetchBankAccountCredentailsData = async () => {
         const bankAccountDetailsList = await readBankAccountCredentialsFromStorage();
         if (Array.isArray(bankAccountDetailsList)) {
@@ -196,15 +209,19 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
     }, []);
 
     useEffect(() => {
-        var dataRowForDisplay: any = {};
         var dataRowsForDisplay: any[] = [];
-
         bankAccountCredentialRows.forEach((row: any) => {
+            var dataRowForDisplay: any = {};
             // Do something with each row
             dataRowForDisplay.id = row.id;
             dataRowForDisplay.AccountHolderName = row.BasicAccountDetails.AccountHolderName;
             dataRowForDisplay.BankName = row.BasicAccountDetails.BankName;
-            dataRowForDisplay.AccountType = row.BasicAccountDetails.AccountType;
+            if (row.BasicAccountDetails.AccountType === "Other"){
+                dataRowForDisplay.AccountType = row.BasicAccountDetails.OtherAccountType;
+            }
+            else {
+                dataRowForDisplay.AccountType = row.BasicAccountDetails.AccountType;
+            }
             dataRowForDisplay.AccountNumber = row.BasicAccountDetails.AccountNumber;
             dataRowForDisplay.CustomerId = row.BasicAccountDetails.CustomerId;
             dataRowForDisplay.LoginId = row.BasicAccountDetails.LoginId;
@@ -239,6 +256,13 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
                 initialState={{ pagination: { paginationModel: { pageSize: 5, page: 0 } } }}
                 pageSizeOptions={[5, 10, 20]}
                 autoHeight={false}
+                sx={{
+                    '& .MuiDataGrid-columnHeaderTitle': {
+                        whiteSpace: 'normal',
+                        lineHeight: 1.2,
+                        wordBreak: 'break-word',
+                    },
+                }}
             />
             {/* Add Modal */}
             <Modal open={addBankAccountCredentailModelDialogOpen} onClose={() => setAddBankAccountCredentailModelDialogOpen(false)}>
@@ -257,4 +281,4 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
     );
 };
 
-export default BankAccountCredentialListComponent; 
+export default BankAccountCredentialListComponent;
