@@ -1,4 +1,6 @@
-import { Grid, Box, Button, Paper, TextField, Typography } from "@mui/material";
+import { Grid, Box, Button, Paper, TextField, Typography, IconButton, InputAdornment } from "@mui/material";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { ICardDetails } from "../../entities/db-entities/bank-account-credentails";
 import React from "react";
 
@@ -22,6 +24,8 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
         AdditionalInfo: {},
     };
     const [cardDetailsObject, setCardDetailsObject] = React.useState<ICardDetails | null>(props.cardDetails || defaultCardDetails);
+    const [showCVV, setShowCVV] = React.useState(false);
+    const [showPin, setShowPin] = React.useState(false);
     const onHtmlInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name } = e.target;
         let value = e.target.value;
@@ -39,7 +43,7 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
 
     return (
         <Paper sx={{ p: 4, maxWidth: 500, mx: 'auto', my: 4 }}>
-            <Typography variant="h6" mb={2}>Add Credit Card Details</Typography>
+            <Typography variant="h6" mb={2}>Card Details</Typography>
             <Grid container spacing={2}>
                 <Grid>
                     <TextField
@@ -121,12 +125,26 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                     <TextField
                         label="CVV"
                         name="CVV"
+                        type={showCVV ? 'text' : 'password'}
                         value={cardDetailsObject.CVV}
                         onChange={onHtmlInputChange}
                         required
                         fullWidth
                         size="small"
                         inputProps={{ maxLength: 4, inputMode: 'numeric', pattern: '[0-9]*' }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle cvv visibility"
+                                        onClick={() => setShowCVV((show) => !show)}
+                                        edge="end"
+                                    >
+                                        {showCVV ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                     />
                 </Grid>
                 <Grid>
@@ -144,12 +162,26 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                     <TextField
                         label="PIN"
                         name="Pin"
+                        type={showPin ? 'text' : 'password'}
                         value={cardDetailsObject.Pin}
                         onChange={onHtmlInputChange}
                         required
                         fullWidth
                         size="small"
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle pin visibility"
+                                        onClick={() => setShowPin((show) => !show)}
+                                        edge="end"
+                                    >
+                                        {showPin ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                     />
                 </Grid>
                 {/* AdditionalInfo can be handled with a custom component if needed */}

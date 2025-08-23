@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ICardDetails } from '../../entities/db-entities/bank-account-credentails';
 import { Grid, Box, Typography, Button, Paper, TextField, IconButton, Modal } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
+import MaskedCell from '../common-components/masked-cell-component';
+import CopyCell from '../common-components/copy-cell-component';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid } from '@mui/x-data-grid';
@@ -71,8 +73,8 @@ const CardDetailsComponent: React.FC<CardDetailsComponentProps> = (props) => {
         setCardDetails(defaultCardDetails);
         setShowAddCardDetailsModal(true);
     }
-    const onShowEditCardDetailsPanel = (event: any) => {
-        setCardDetails(event.row);
+    const onShowEditCardDetailsPanel = (row: any) => {
+        setCardDetails(row);
         setShowAddCardDetailsModal(true);
     };
 
@@ -98,8 +100,18 @@ const CardDetailsComponent: React.FC<CardDetailsComponentProps> = (props) => {
             )
         },
         { field: 'ExpiryDate', headerName: 'Expiry Date', flex: 1 },
-        { field: 'CVV', headerName: 'CVV', flex: 1 },
-        { field: 'Pin', headerName: 'Pin', flex: 1 },
+        {
+            field: 'CVV',
+            headerName: 'CVV',
+            flex: 1,
+            renderCell: (params: any) => <MaskedCell value={params.value} />
+        },
+        {
+            field: 'Pin',
+            headerName: 'Pin',
+            flex: 1,
+            renderCell: (params: any) => <MaskedCell value={params.value} />
+        },
         { field: 'LastUpdatedOn', headerName: 'LastUpdatedOn', flex: 1 },
         {
             field: 'modify',
@@ -110,7 +122,7 @@ const CardDetailsComponent: React.FC<CardDetailsComponentProps> = (props) => {
             renderCell: (params: any) => (
                 <div style={{ display: 'flex' }}>
                     <div>
-                        <IconButton color="secondary" title='Copy Value' onClick={() => onShowEditCardDetailsPanel(params)} aria-label="copy">
+                        <IconButton color="secondary" title='Copy Value' onClick={() => onShowEditCardDetailsPanel(params.row)} aria-label="copy">
                             <EditIcon />
                         </IconButton>
                     </div>
@@ -159,7 +171,7 @@ const CardDetailsComponent: React.FC<CardDetailsComponentProps> = (props) => {
             <Modal open={showAddCardDetailsModal} onClose={() => setShowAddCardDetailsModal(false)}>
                 <AddCardDetailsComponent
                     onAddCardDetails={onAddCardDetails}
-                    onClose={() => setShowAddCardDetailsModal(false)} cardDetails={undefined} />
+                    onClose={() => setShowAddCardDetailsModal(false)} cardDetails={cardDetails} />
             </Modal>
             
             

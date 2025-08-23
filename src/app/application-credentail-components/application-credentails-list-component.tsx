@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopy from '@mui/icons-material/ContentCopy';
+import MaskedCell from '../common-components/masked-cell-component';
 
 interface ApplicationCredentialsListComponentProps {
 
@@ -126,8 +127,8 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
                         {params.row.UserName}
                     </div>
                     <div style={{ marginLeft: 'auto' }}>
-                        <IconButton color="secondary" title='Copy User Name' onClick={() => copyContentToClipBoard(params.row.UserName)} aria-label="edit">
-                            <ContentCopy />
+                        <IconButton size="small" title='Copy User Name' onClick={() => copyContentToClipBoard(params.row.UserName)} aria-label="edit">
+                            <ContentCopy fontSize="small" />
                         </IconButton>
                     </div>
                 </div>
@@ -137,18 +138,7 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
             field: 'Password',
             headerName: 'Password',
             flex: 1,
-            renderCell: (params: any) => (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div>
-                        {params.row.Password}
-                    </div>
-                    <div style={{ marginLeft: 'auto' }}>
-                        <IconButton color="secondary" title='Copy Password' onClick={() => copyContentToClipBoard(params.row.Password)} aria-label="edit">
-                            <ContentCopy />
-                        </IconButton>
-                    </div>
-                </div>
-            )
+            renderCell: (params: any) => <MaskedCell value={params.value} />
         },
         { 
             field: 'LoginUrl', 
@@ -156,19 +146,19 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
             flex: 1, 
             filterable: true, 
             sortable: true,
-            renderCell: (params: any) => (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div>
-                        {getUrlStringForDisplay(params.row.LoginUrl)}
-                    </div>
-                    <div style={{ marginLeft: 'auto' }}>
-                        <IconButton color="secondary" title='Copy Login URL' onClick={() => copyContentToClipBoard(params.row.LoginUrl)} aria-label="edit">
-                            <ContentCopy />
-                        </IconButton>
-                    </div>
-                </div>
-                
-            )
+            renderCell: (params: any) => {
+                            const url = params.value;
+                            if (!url) return null;
+                            const handleClick = (e: React.MouseEvent) => {
+                                e.preventDefault();
+                                window.api.openExternal(url);
+                            };
+                            return (
+                                <a href={url} onClick={handleClick} style={{ color: '#1976d2', textDecoration: 'underline', cursor: 'pointer' }} target="_blank" rel="noopener noreferrer">
+                                    {url}
+                                </a>
+                            );
+                        }
         },
         {
             field: 'AdditionalInfo', headerName: 'Additional Info', flex: 1, filterable: true, sortable: true,

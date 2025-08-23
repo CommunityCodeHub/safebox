@@ -66,12 +66,6 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
         getUpdatedBasicAccountDetails: getUpdatedBasicAccountDetails
     }));
 
-    // const onNextButtonClick = (e: any) => {
-    //     e.preventDefault();
-    //     props.onBasicAccountDetailsChange(basicAccountDetailsState);
-    //     props.onNextButtonClick();
-    // }
-
     const onAccountTypeDropdownValueChange = (e: any) => {
         var accountDetailsObject = basicAccountDetailsState as any;
         accountDetailsObject.AccountType = e.target.value;
