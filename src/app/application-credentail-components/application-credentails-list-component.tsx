@@ -97,6 +97,15 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
         }
         return result;
     }
+    const getAddtionalInfoPropsForTitle = (additionalInfo: any): string => {
+        var result = '';
+        if (additionalInfo && typeof additionalInfo === 'object') {
+            Object.keys(additionalInfo).forEach((key) => {
+                result += `${key}: ${additionalInfo[key]}\n`;
+            });
+        }
+        return result;
+    }
 
     const copyContentToClipBoard = (content: string) => {
         navigator.clipboard.writeText(content).then(() => {
@@ -161,12 +170,13 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
                         }
         },
         {
-            field: 'AdditionalInfo', headerName: 'Additional Info', flex: 1, filterable: true, sortable: true,
+            field: 'AdditionalInfo', headerName: 'Additional Info', flex: 1, filterable: true, sortable: true,  
             renderCell: (params: any) => (
-                <div >
+                <div title={getAddtionalInfoPropsForTitle(params.row.AdditionalInfo)}>
                     {getAddtionalInfoPropsForDisplay(params.row.AdditionalInfo)}
                 </div>
-            )
+            ),
+            
         },
         { field: 'CreatedOn', headerName: 'Created On', flex: 1, filterable: true, sortable: true },
         { field: 'LastUpdatedOn', headerName: 'Last Updated On', flex: 1, filterable: true, sortable: true },

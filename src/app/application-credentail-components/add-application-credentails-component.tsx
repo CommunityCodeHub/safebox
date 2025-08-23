@@ -1,6 +1,9 @@
 
 import React, { useState } from 'react';
-import { Box, Typography, Button, Modal, Paper, TextField, Grid } from '@mui/material';
+import { Box, Typography, Button, Modal, Paper, TextField, Grid, InputAdornment } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+    
 import { IApplicationCredentials } from '../../entities/db-entities/application-credentails';
 import { v4 as uuidv4 } from 'uuid';
 import { DataGrid } from '@mui/x-data-grid';
@@ -33,6 +36,8 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
         defaultAppCred = props.appCredentials;
     }
 
+    const [showPassword, setShowPassword] = useState(false);
+
     const [appCredentials, setAppCredentials] = useState<IApplicationCredentials | null>(props.appCredentials || defaultAppCred);
 
     const [form, setForm] = useState<IApplicationCredentials>({ ...defaultAppCred });
@@ -62,8 +67,8 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
                         {params.row.value}
                     </div>
                     <div style={{ marginLeft: 'auto' }}>
-                        <IconButton color="secondary" title='Copy Value' onClick={() => copyContentToClipBoard(params.row.value)} aria-label="edit">
-                            <ContentCopy />
+                        <IconButton size='small' title='Copy Value' onClick={() => copyContentToClipBoard(params.row.value)} aria-label="edit">
+                            <ContentCopy fontSize='small' />
                         </IconButton>
                     </div>
                 </div>
@@ -178,11 +183,25 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
                             <TextField
                                 label="Password"
                                 name="Password"
+                                type={showPassword ? 'text' : 'password'}
                                 value={form.Password}
                                 onChange={onHtmlInputChange}
                                 required
                                 size="small"
                                 sx={{ flex: 1 }}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={() => setShowPassword((show) => !show)}
+                                                edge="end"
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
                             />
                         </Box>
                     </Grid>
