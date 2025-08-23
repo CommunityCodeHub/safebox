@@ -37,6 +37,7 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
     }
 
     const [showPassword, setShowPassword] = useState(false);
+    const [loginUrlError, setLoginUrlError] = useState('');
 
     const [appCredentials, setAppCredentials] = useState<IApplicationCredentials | null>(props.appCredentials || defaultAppCred);
 
@@ -126,8 +127,22 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
         props.onEditAppCredentails(credentails);
     };
 
+    const validateUrl = (url: string) => {
+        try {
+            if (!url) return '';
+            new URL(url);
+            return '';
+        } catch {
+            return 'Enter a valid URL (e.g. https://example.com)';
+        }
+    };
+
     const onHtmlInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        if (name === 'LoginUrl') {
+            setLoginUrlError(validateUrl(value));
+        }
+        setForm({ ...form, [name]: value });
     };
 
     const onAddAdditionalInfo = (key: string, value: string): void => {
@@ -215,6 +230,8 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
                                 onChange={onHtmlInputChange}
                                 size="small"
                                 sx={{ flex: 1 }}
+                                error={!!loginUrlError}
+                                helperText={loginUrlError}
                             />
                         </Box>
                     </Grid>
