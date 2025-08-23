@@ -17,7 +17,8 @@ declare global {
 
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from '../theme';
 import Login from './Login';
 import RegisterUser from './RegisterUser';
 import Landing from './Landing';
@@ -91,24 +92,25 @@ const App: React.FC = () => {
 		}
 	};
 
-	return (
-		<>
-			{loggedIn ? (
-				<Landing />
-			) : showRegister ? (
-				<RegisterUser
-					onRegister={handleRegister}
-					onBackToLogin={() => setShowRegister(false)}
-				/>
-			) : (
-				<Login
-					onLogin={handleLogin}
-					onRegister={() => setShowRegister(true)}
-					error={loginError}
-				/>
-			)}
-		</>
-	);
+		return (
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				{loggedIn ? (
+					<Landing />
+				) : showRegister ? (
+					<RegisterUser
+						onRegister={handleRegister}
+						onBackToLogin={() => setShowRegister(false)}
+					/>
+				) : (
+					<Login
+						onLogin={handleLogin}
+						onRegister={() => setShowRegister(true)}
+						error={loginError}
+					/>
+				)}
+			</ThemeProvider>
+		);
 };
 
 const root = createRoot(document.body);
