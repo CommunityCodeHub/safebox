@@ -8,14 +8,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import MaskedCell from '../common-components/masked-cell-component';
+import { useUserSettings } from '../services/user-settings-context';
+import { IUserSettings } from '../../entities/db-entities/user-settings';
 
 interface ApplicationCredentialsListComponentProps {
 
 }
 
-async function readApplicationCredentialsFromStorage(): Promise<IApplicationCredentials[]> {
-    const username = sessionStorage.getItem('UserName');
-    const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
+async function readApplicationCredentialsFromStorage(userSettings: IUserSettings): Promise<IApplicationCredentials[]> {
+    
+    const workspacePath = userSettings.WorkspacePath;
     if (!workspacePath) return [];
 
     try {
@@ -33,9 +35,9 @@ async function readApplicationCredentialsFromStorage(): Promise<IApplicationCred
     }
 }
 
-async function writeApplicationCredentialsToStorage(data: IApplicationCredentials[]): Promise<void> {
-    const username = sessionStorage.getItem('UserName');
-    const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
+async function writeApplicationCredentialsToStorage(data: IApplicationCredentials[], userSettings: IUserSettings): Promise<void> {
+
+    const workspacePath = userSettings.WorkspacePath;
 
     if (!workspacePath) {
         console.error('Workspace path not found');
@@ -57,13 +59,13 @@ async function writeApplicationCredentialsToStorage(data: IApplicationCredential
 }
 
 const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListComponentProps> = () => {
-
+    const userSettings = useUserSettings();
     const [applicationCredentailList, setAppCredentialList] = useState<IApplicationCredentials[]>([]);
     const [bankAccountCredentailRows, setBankAccountCredentailRows] = useState([]);
     const [addApplicationCredentailsFormMode, setAddApplicationCredentailsFormMode] = useState<"add" | "edit">('add');
 
     const fetchApplicationCredentailsData = async () => {
-        const appCredentialsData = await readApplicationCredentialsFromStorage();
+        const appCredentialsData = await readApplicationCredentialsFromStorage(userSettings);
         if (Array.isArray(appCredentialsData)) {
             setAppCredentialList(appCredentialsData);
             var dataRow: any;
@@ -217,7 +219,7 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
         if (result) {
             applicationCredentailList.splice(idx, 1);
             setAppCredentialList(applicationCredentailList);
-            await writeApplicationCredentialsToStorage(applicationCredentailList);
+            await writeApplicationCredentialsToStorage(applicationCredentailList, userSettings);
             await fetchApplicationCredentailsData();
         }
     }
@@ -228,14 +230,14 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
         var appCredentials = applicationCredentailList;
         appCredentials.push(rec);
         setAppCredentialList(appCredentials);
-        await writeApplicationCredentialsToStorage(appCredentials);
+        await writeApplicationCredentialsToStorage(appCredentials, userSettings);
         await fetchApplicationCredentailsData();
         setAddApplicationCredentailModelDialogOpen(false);
     };
 
     const onUpdateAppCredentails = async (rec: IApplicationCredentials): Promise<void> => {
         applicationCredentailList[editApplicationCredentailsIndex] = rec;
-        await writeApplicationCredentialsToStorage(applicationCredentailList);
+        await writeApplicationCredentialsToStorage(applicationCredentailList, userSettings);
         await fetchApplicationCredentailsData();
         setAddApplicationCredentailModelDialogOpen(false);
     }

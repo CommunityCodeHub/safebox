@@ -3,6 +3,7 @@
 
 
 import { contextBridge, ipcRenderer } from 'electron';
+import { IUserSettings } from './entities/db-entities/user-settings';
 
 contextBridge.exposeInMainWorld('api', {
   registerUser: (username: string, password: string, workspacePath: string) =>
@@ -19,6 +20,11 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('read-application-credentials-file', { workspacePath }),
   openExternal: (url: string) =>
     ipcRenderer.invoke('open-external', { url }),
+
+  readUserSettingsFile: (username: string) =>
+    ipcRenderer.invoke('read-user-settings-file', { username }),
+  writeUserSettingsFile: (data: IUserSettings) =>
+    ipcRenderer.invoke('write-user-settings-file', { data }),
 
 });
 

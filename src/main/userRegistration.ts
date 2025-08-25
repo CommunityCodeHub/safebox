@@ -1,7 +1,7 @@
 import { ipcMain, safeStorage } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import { StrongCrypto } from '../app/cryptoUtils';
+import { StrongCrypto } from '../cryptography/cryptoUtils';
 import { Password, Work } from '@mui/icons-material';
 
 // Register the IPC handler for user registration

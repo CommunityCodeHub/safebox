@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
-import { Box, Tabs, Tab } from '@mui/material';
-//import BankAccountCredentialsComponent from './bank-account-credentails-component';
+import { Box, Tabs, Tab, IconButton, Tooltip, Modal } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import DrawerMenu from './common-components/drawer-menu-component';
 import BankAccountCredentialListComponent from './bank-account-credentail-components/bank-account-credentails-list-component';
 import { IBankAccountCredentails } from '../entities/db-entities/bank-account-credentails';
 import ApplicationCredentialsListComponent from './application-credentail-components/application-credentails-list-component';
-import { IApplicationCredentials } from '../entities/db-entities/application-credentails';
+import SettingsComponent from './settings-components/settings-component';
+import AddApplicationCredentialsComponent from './application-credentail-components/add-application-credentails-component';
+import { useUserSettings } from './services/user-settings-context';
+import { IUserSettings } from '../entities/db-entities/user-settings';
 
-async function readBankAccountDataFromStorage(): Promise<IBankAccountCredentails[]> {
-  const username = sessionStorage.getItem('UserName');
-  const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
+async function readBankAccountDataFromStorage(userSettings: IUserSettings): Promise<IBankAccountCredentails[]> {
+  const workspacePath = userSettings.WorkspacePath;
   if (!workspacePath) return [];
 
   try {
@@ -26,30 +29,9 @@ async function readBankAccountDataFromStorage(): Promise<IBankAccountCredentails
   }
 }
 
-// async function readApplicationCredentialsFromStorage(): Promise<IApplicationCredentials[]> {
-//   const username = sessionStorage.getItem('UserName');
-//   const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
-//   if (!workspacePath) return [];
-
-//   try {
-//     const result = await window.api.readApplicationCredentialsFile(workspacePath);
-//     if (result.success) {
-//       return result.fileContent as IApplicationCredentials[];
-//     } else {
-//       console.error('Failed to read application credentials file:', result.error);
-//       return [];
-//     }
-//   } catch (err) {
-//     console.error('Error reading application credentials file:', err);
-//     alert('Error reading application credentials file');
-//     return [];
-//   }
-// }
-
-async function writeBankAccountDataToStorage(data: IBankAccountCredentails[]): Promise<void> {
-  const username = sessionStorage.getItem('UserName');
-  const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
-
+async function writeBankAccountDataToStorage(data: IBankAccountCredentails[], userSettings: IUserSettings): Promise<void> {
+  
+  const workspacePath = userSettings.WorkspacePath;
   if (!workspacePath) {
     console.error('Workspace path not found');
     alert('Workspace path not found');
@@ -69,44 +51,20 @@ async function writeBankAccountDataToStorage(data: IBankAccountCredentails[]): P
   }
 }
 
-// async function writeApplicationCredentialsToStorage(data: IApplicationCredentials[]): Promise<void> {
-//   const username = sessionStorage.getItem('UserName');
-//   const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
-
-//   if (!workspacePath) {
-//     console.error('Workspace path not found');
-//     alert('Workspace path not found');
-//     return;
-//   }
-
-//   try {
-//     const result = await window.api.writeApplicationCredentialsFile(workspacePath, data);
-//     if (result.success) {
-//       console.log('Application credentials data written successfully');
-//     } else {
-//       console.error('Failed to write application credentials data:', result.error);
-//     }
-//   } catch (err) {
-//     console.error('Error writing application credentials file:', err);
-//     alert('Error writing application credentials file');
-//   }
-// }
-
 const Landing: React.FC = () => {
   const [tab, setTab] = React.useState(0);
   const [bankData, setBankData] = React.useState<IBankAccountCredentails[]>([]);
-  //const [appCredentials, setAppCredentials] = React.useState<IApplicationCredentials[]>([]);
-
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [breadcrumb, setBreadcrumb] = React.useState<string[]>(["Home"]);
+  const userSettings = useUserSettings();
+  
   useEffect(() => {
     const fetchData = async () => {
-      const bankAccountData = await readBankAccountDataFromStorage();
+      const bankAccountData = await readBankAccountDataFromStorage(userSettings);
       if (Array.isArray(bankAccountData) && bankAccountData.length > 0) {
         setBankData(bankAccountData);
       }
-      // const appCredentialsData = await readApplicationCredentialsFromStorage();
-      // if (Array.isArray(appCredentialsData) && appCredentialsData.length > 0) {
-      //   setAppCredentials(appCredentialsData);
-      // }
+      
     };
     fetchData();
   }, []);
@@ -114,28 +72,49 @@ const Landing: React.FC = () => {
   const handleAddBankCredentails = (rec: IBankAccountCredentails) => {
     const updated = [...bankData, rec];
     setBankData(updated);
-    writeBankAccountDataToStorage(updated);
+    writeBankAccountDataToStorage(updated, userSettings);
   };
   const handleEditBankCredentails = (rec: IBankAccountCredentails, idx: number) => {
     const updated = bankData.map((item, i) => (i === idx ? rec : item));
     setBankData(updated);
-    writeBankAccountDataToStorage(updated);
+    writeBankAccountDataToStorage(updated, userSettings);
   };
 
-  // const handleAddAppCredentials = (rec: IApplicationCredentials) => {
-  //   const updated = [...appCredentials, rec];
-  //   setAppCredentials(updated);
-  //   writeApplicationCredentialsToStorage(updated);
-  // };
-
-  // const handleEditAppCredentials = (rec: IApplicationCredentials, idx: number) => {
-  //   const updated = appCredentials.map((item, i) => (i === idx ? rec : item));
-  //   setAppCredentials(updated);
-  //   writeApplicationCredentialsToStorage(updated);
-  // };
+  const [showSettingsModalDialog, setShowSettingsModalDialog] = React.useState(false);
 
   return (
-    <Box sx={{ width: '99vw', height: '99vh', bgcolor: '#f5f5f5', overflow: 'auto' }}>
+    <Box sx={{ width: '99vw', height: '99vh', bgcolor: '#f5f5f5', overflow: 'auto', position: 'relative' }}>
+      {/* Drawer Menu Button */}
+      <Tooltip title="Menu">
+        <IconButton
+          color="primary"
+          sx={{ position: 'absolute', top: 8, left: 16, zIndex: 20 }}
+          onClick={() => setDrawerOpen(true)}
+          aria-label="menu"
+        >
+          <MenuIcon />
+        </IconButton>
+      </Tooltip>
+      {/* Drawer Menu */}
+      <DrawerMenu
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onLogout={() => {
+          sessionStorage.clear();
+          window.location.reload();
+        }}
+        onSettings={() => {
+          setBreadcrumb(["Home", "Settings"]);
+          setDrawerOpen(false);
+          setShowSettingsModalDialog(true);
+        }}
+        breadcrumb={breadcrumb}
+      />
+      <Modal open={showSettingsModalDialog} onClose={() => setShowSettingsModalDialog(false)}>
+        <SettingsComponent onClose={() => setShowSettingsModalDialog(false)} />
+      </Modal>
+      
+      {/* Tabs and Content */}
       <Tabs value={tab} onChange={(_e, v) => setTab(v)} centered>
         <Tab label="Bank Account Credentials" />
         <Tab label="Application Credentials" />
@@ -143,6 +122,8 @@ const Landing: React.FC = () => {
       {tab === 0 && <BankAccountCredentialListComponent />}
       {tab === 1 && <ApplicationCredentialsListComponent />}
     </Box>
+
+    
   );
 };
 

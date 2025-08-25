@@ -7,15 +7,18 @@ import CopyCell from '../common-components/copy-cell-component';
 import MaskedCell from '../common-components/masked-cell-component';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useUserSettings } from '../services/user-settings-context';
+import { IUserSettings } from '../../entities/db-entities/user-settings';
 
 
 interface IBankAccountCredentialsListComponentProps {
 
 }
 
-async function readBankAccountCredentialsFromStorage(): Promise<IBankAccountCredentails[]> {
-    const username = sessionStorage.getItem('UserName');
-    const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
+async function readBankAccountCredentialsFromStorage(userSettings: IUserSettings): Promise<IBankAccountCredentails[]> {
+        
+    const workspacePath = userSettings.WorkspacePath; 
+
     if (!workspacePath) return [];
 
     try {
@@ -33,10 +36,8 @@ async function readBankAccountCredentialsFromStorage(): Promise<IBankAccountCred
     }
 }
 
-async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentails[]): Promise<void> {
-    const username = sessionStorage.getItem('UserName');
-    const workspacePath = localStorage.getItem(`${username}-workspacePath`)?.toString();
-
+async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentails[], userSettings: IUserSettings): Promise<void> {
+    const workspacePath = userSettings.WorkspacePath;
     if (!workspacePath) {
         console.error('Workspace path not found');
         alert('Workspace path not found');
@@ -57,6 +58,8 @@ async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentail
 }
 
 const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListComponentProps> = () => {
+    const userSettings = useUserSettings();
+
     const getBankAccountColumns = (onEdit: (row: IBankAccountCredentails, idx: number) => void): GridColDef[] => [
         { field: 'AccountHolderName', headerName: 'Account Holder', flex: 0.75, filterable: true, sortable: true },
         { field: 'BankName', headerName: 'Bank', flex: 0.5, filterable: true, sortable: true },
@@ -158,14 +161,14 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
         var bankAccountCredentails = bankAccountDetailsList;
         bankAccountCredentails.push(rec);
         setBankAccountDetailsList(bankAccountCredentails);
-        await writeBankAccountCredentialsToStorage(bankAccountCredentails);
+        await writeBankAccountCredentialsToStorage(bankAccountCredentails, userSettings);
         await fetchBankAccountCredentailsData();
         setAddBankAccountCredentailModelDialogOpen(false);
     };
 
     const onUpdateBankAccountCredentials = async (rec: IBankAccountCredentails): Promise<void> => {
         bankAccountDetailsList[editBankAccountCredentailsIndex] = rec;
-        await writeBankAccountCredentialsToStorage(bankAccountDetailsList);
+        await writeBankAccountCredentialsToStorage(bankAccountDetailsList, userSettings);
         await fetchBankAccountCredentailsData();
         setAddBankAccountCredentailModelDialogOpen(false);
     }
@@ -177,7 +180,7 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
         var bankAccountCredentails = bankAccountDetailsList;
         bankAccountCredentails.splice(idx, 1);
         setBankAccountDetailsList([...bankAccountCredentails]);
-        await writeBankAccountCredentialsToStorage(bankAccountCredentails);
+        await writeBankAccountCredentialsToStorage(bankAccountCredentails, userSettings);
         await fetchBankAccountCredentailsData();
     };
 
@@ -187,7 +190,7 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
     };
 
     const fetchBankAccountCredentailsData = async () => {
-        const bankAccountDetailsList = await readBankAccountCredentialsFromStorage();
+        const bankAccountDetailsList = await readBankAccountCredentialsFromStorage(userSettings);
         if (Array.isArray(bankAccountDetailsList)) {
             setBankAccountDetailsList(bankAccountDetailsList);
             var dataRow: any;

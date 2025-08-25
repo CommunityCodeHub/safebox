@@ -1,7 +1,17 @@
 
 import React, { useState, useRef } from 'react';
-import { Box, Button, Card, CardContent, TextField, Typography, Alert, InputAdornment, IconButton } from '@mui/material';
+import { Box, Button, Card, CardContent, TextField, Typography, Alert, InputAdornment, IconButton, Tooltip } from '@mui/material';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+// Helper to generate a GUID
+function generateGuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 
 declare module 'react' {
   interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -11,7 +21,7 @@ declare module 'react' {
 }
 
 interface RegisterUserProps {
-  onRegister: (username: string, password: string, workspacePath: string) => void;
+  onRegister: (username: string, password: string, workspacePath: string, encryptionKey: string) => void;
   onBackToLogin: () => void;
 }
 
@@ -25,6 +35,9 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [workspacePath, setWorkspacePath] = useState('');
+  const [encryptionKey, setEncryptionKey] = useState('');
+  const [showEncryptionKey, setShowEncryptionKey] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,12 +56,12 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
       return;
     }
     setError(null);
-    onRegister(username, password, workspacePath);
+    onRegister(username, password, workspacePath, encryptionKey);
   };
 
   return (
     <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="#f5f5f5">
-      <Card sx={{ minWidth: 320, maxWidth: 400, width: '100%', boxShadow: 3 }}>
+      <Card sx={{ minWidth: 370, maxWidth: 450, width: '100%', boxShadow: 3 }}>
         <CardContent>
           <Typography variant="h5" component="h2" align="center" gutterBottom>
             Register User
@@ -84,6 +97,41 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               onChange={e => setConfirmPassword(e.target.value)}
               required
             />
+            <TextField
+              label="Encryption Key"
+              type={showEncryptionKey ? 'text' : 'password'}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={encryptionKey}
+              onChange={e => setEncryptionKey(e.target.value)}
+              required
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Tooltip title="Generate Encryption Key">
+                      <IconButton
+                        aria-label="generate encryption key"
+                        onClick={() => setEncryptionKey(generateGuid())}
+                        edge="end"
+                      >
+                        <AutorenewIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Show Encryption Key">
+                      <IconButton
+                        aria-label="Show Encryption Key"
+                        onClick={() => setShowEncryptionKey((show) => !show)}
+                        edge="end"
+                      >
+                        {showEncryptionKey ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          
             <TextField
               label="Workspace Folder Path"
               variant="outlined"
