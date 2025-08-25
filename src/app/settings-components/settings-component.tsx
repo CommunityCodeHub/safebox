@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField, Typography, Paper, InputAdornment, IconButton } from '@mui/material';
+import { Box, Button, TextField, Typography, Paper, InputAdornment, IconButton, Tooltip } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useUserSettings } from '../services/user-settings-context';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
@@ -45,6 +46,23 @@ const SettingsComponent: React.FC<SettingsComponentProps> = (props) => {
         size="small"
         sx={{ flex: 1 }}
         required
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <Tooltip title="Copy to clipboard">
+                <IconButton
+                  aria-label="copy workspace path"
+                  onClick={() => {
+                    navigator.clipboard.writeText(workspacePath);
+                  }}
+                  edge="end"
+                >
+                  <ContentCopyIcon />
+                </IconButton>
+              </Tooltip>
+            </InputAdornment>
+          )
+        }}
       />
 
       <TextField
@@ -61,13 +79,27 @@ const SettingsComponent: React.FC<SettingsComponentProps> = (props) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowEncryptionKey((show) => !show)}
-                edge="end"
-              >
-                {showEncryptionKey ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
+              <Tooltip title="View Encryption Key.">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowEncryptionKey((show) => !show)}
+                  edge="end"
+                >
+                  {showEncryptionKey ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Copy to clipboard">
+                <IconButton
+                  aria-label="copy encryption key"
+                  onClick={() => {
+                    navigator.clipboard.writeText(encryptionKey);
+                  }}
+                  edge="end"
+                >
+                  <ContentCopyIcon />
+                </IconButton>
+              </Tooltip>
+
             </InputAdornment>
           )
         }}
@@ -78,11 +110,14 @@ const SettingsComponent: React.FC<SettingsComponentProps> = (props) => {
         </Typography>
       )}
       <Box mt={3} display="flex" justifyContent="flex-end">
-        <Button variant="contained" color="primary" onClick={handleSave}>
+        {/* <Button variant="contained" color="primary" onClick={handleSave}>
           Save
         </Button>
         <Button sx={{ mr: 2 }} onClick={props.onClose}>
           Cancel
+        </Button> */}
+        <Button variant="contained" color="primary" onClick={props.onClose}>
+          Close
         </Button>
       </Box>
     </Paper>

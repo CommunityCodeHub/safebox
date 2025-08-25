@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { IUserSettings } from '../../entities/db-entities/user-settings';
 
 export const UserSettingsContext = createContext<IUserSettings | undefined>(undefined);

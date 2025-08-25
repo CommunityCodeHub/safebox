@@ -43,7 +43,7 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !password || !confirmPassword || !workspacePath) {
+    if (!username || !password || !confirmPassword || !workspacePath || !encryptionKey) {
       setError('All fields are required.');
       return;
     }

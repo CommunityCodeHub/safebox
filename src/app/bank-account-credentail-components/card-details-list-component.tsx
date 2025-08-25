@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { ICardDetails } from '../../entities/db-entities/bank-account-credentails';
-import { Grid, Box, Typography, Button, Paper, TextField, IconButton, Modal } from "@mui/material";
+import { Grid, Box, Typography, Button, IconButton, Modal } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
 import MaskedCell from '../common-components/masked-cell-component';
-import CopyCell from '../common-components/copy-cell-component';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid } from '@mui/x-data-grid';

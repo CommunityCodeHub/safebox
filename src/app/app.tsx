@@ -28,7 +28,7 @@ declare global {
 	const App: React.FC = () => {
 		const [showRegister, setShowRegister] = React.useState(false);
 		const [loginError, setLoginError] = React.useState<string | undefined>(undefined);
-		const [loggedIn, setLoggedIn] = React.useState(false);
+		const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(false);
 		const [userSettings, setUserSettings] = React.useState<IUserSettings | null>(null);
 
 		// Check if user is already logged in
@@ -39,11 +39,11 @@ declare global {
 					if (userSettings) {
 						setUserSettings(userSettings);
 					}
-					setLoggedIn(true);
+					setIsUserLoggedIn(true);
 					return;
 				});
 			}
-			setLoggedIn(false);
+			setIsUserLoggedIn(false);
 
 		}, []);
 
@@ -112,7 +112,7 @@ declare global {
 				setLoginError('Incorrect password.');
 			}
 
-			setLoggedIn(true);
+			setIsUserLoggedIn(true);
 			sessionStorage.setItem('IsLoggedIn', 'true');
 			sessionStorage.setItem('LastLoggedInTime', new Date().getTime().toString());
 			sessionStorage.setItem('UserName', username);
@@ -133,6 +133,7 @@ declare global {
 				if (result.success) {
 					setUserSettings(userSettings);
 					setShowRegister(false);
+					setIsUserLoggedIn(false);
 					alert(`User Registration successful!. Please login to proceed.`);
 				} else {
 					alert(`Registration failed: ${result.error}`);
@@ -145,7 +146,7 @@ declare global {
 		return (
 			<ThemeProvider theme={theme}>
 				<CssBaseline />
-				{loggedIn ? (
+				{isUserLoggedIn ? (
 					<UserSettingsContext.Provider value={userSettings}>
 						<Landing />
 					</UserSettingsContext.Provider>

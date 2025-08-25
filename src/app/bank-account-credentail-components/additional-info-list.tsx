@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, Button, Paper, TextField, IconButton, Modal } from "@mui/material";
+import { Grid, Box, Button, IconButton, Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
 import { IExtensibleProperties } from "../../entities/db-entities/extensible-properties";

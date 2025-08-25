@@ -1,14 +1,9 @@
-import { AccountType, IBankAccountCredentails, IBasicAccountDetails, ICardDetails } from "../../entities/db-entities/bank-account-credentails";
+import { IBankAccountCredentails, IBasicAccountDetails, ICardDetails } from "../../entities/db-entities/bank-account-credentails";
 import React, { useState, useRef } from 'react';
-import { Box, Typography, Button, Modal, Paper, TextField, Grid, Select, MenuItem, Tabs, Tab } from '@mui/material';
-import { IApplicationCredentials } from '../../entities/db-entities/application-credentails';
-import { v4 as uuidv4 } from 'uuid';
-import { DataGrid } from '@mui/x-data-grid';
-import AddAddtionalInfoComponent from '../common-components/add-additional-info-component';
+import { Box, Typography, Button, Paper, Tabs, Tab } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopy from '@mui/icons-material/ContentCopy';
-import AddAdditionalInfoComponent from "../common-components/add-additional-info-component";
 import BasicDetailsComponent from "./basic-details-component";
 import { IExtensibleProperties } from "../../entities/db-entities/extensible-properties";
 import AdditionalInfoListComponent from "./additional-info-list";
