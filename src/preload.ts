@@ -10,14 +10,14 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('register-user', { username, password, workspacePath }),
   readUserFile: (username: string, password: string, workspacePath: string) =>
     ipcRenderer.invoke('read-user-file', { username, password, workspacePath }),
-  readBankAccountCredentialsFile: (workspacePath: string) =>
-    ipcRenderer.invoke('read-bank-account-credentials-file', { workspacePath }),
-  writeBankAccountCredentialsFile: (workspacePath: string, data: any) =>
-    ipcRenderer.invoke('write-bank-account-credentials-file', { workspacePath, data }),
-  writeApplicationCredentialsFile: (workspacePath: string, data: any) =>
-    ipcRenderer.invoke('write-application-credentials-file', { workspacePath, data }),
-  readApplicationCredentialsFile: (workspacePath: string) =>
-    ipcRenderer.invoke('read-application-credentials-file', { workspacePath }),
+  readBankAccountCredentialsFile: (workspacePath: string, encryptionKey: string) =>
+    ipcRenderer.invoke('read-bank-account-credentials-file', { workspacePath, encryptionKey }),
+  writeBankAccountCredentialsFile: (workspacePath: string, data: any, encryptionKey: string) =>
+    ipcRenderer.invoke('write-bank-account-credentials-file', { workspacePath, data, encryptionKey }),
+  writeApplicationCredentialsFile: (workspacePath: string, data: any, encryptionKey: string) =>
+    ipcRenderer.invoke('write-application-credentials-file', { workspacePath, data, encryptionKey }),
+  readApplicationCredentialsFile: (workspacePath: string, encryptionKey: string) =>
+    ipcRenderer.invoke('read-application-credentials-file', { workspacePath, encryptionKey }),
   openExternal: (url: string) =>
     ipcRenderer.invoke('open-external', { url }),
 

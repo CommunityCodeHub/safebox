@@ -18,10 +18,12 @@ interface ApplicationCredentialsListComponentProps {
 async function readApplicationCredentialsFromStorage(userSettings: IUserSettings): Promise<IApplicationCredentials[]> {
     
     const workspacePath = userSettings.WorkspacePath;
+    const encryptionKey = userSettings.EncryptionKey; 
+
     if (!workspacePath) return [];
 
     try {
-        const result = await window.api.readApplicationCredentialsFile(workspacePath);
+        const result = await window.api.readApplicationCredentialsFile(workspacePath, encryptionKey);
         if (result.success) {
             return result.fileContent as IApplicationCredentials[];
         } else {
@@ -38,6 +40,7 @@ async function readApplicationCredentialsFromStorage(userSettings: IUserSettings
 async function writeApplicationCredentialsToStorage(data: IApplicationCredentials[], userSettings: IUserSettings): Promise<void> {
 
     const workspacePath = userSettings.WorkspacePath;
+    const encryptionKey = userSettings.EncryptionKey;
 
     if (!workspacePath) {
         console.error('Workspace path not found');
@@ -46,7 +49,7 @@ async function writeApplicationCredentialsToStorage(data: IApplicationCredential
     }
 
     try {
-        const result = await window.api.writeApplicationCredentialsFile(workspacePath, data);
+        const result = await window.api.writeApplicationCredentialsFile(workspacePath, data, encryptionKey);
         if (result.success) {
             console.log('Application credentials data written successfully');
         } else {

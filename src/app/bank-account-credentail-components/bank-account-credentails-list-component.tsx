@@ -18,11 +18,12 @@ interface IBankAccountCredentialsListComponentProps {
 async function readBankAccountCredentialsFromStorage(userSettings: IUserSettings): Promise<IBankAccountCredentails[]> {
         
     const workspacePath = userSettings.WorkspacePath; 
+    const encryptionKey = userSettings.EncryptionKey; 
 
     if (!workspacePath) return [];
 
     try {
-        const result = await window.api.readBankAccountCredentialsFile(workspacePath);
+        const result = await window.api.readBankAccountCredentialsFile(workspacePath, encryptionKey);
         if (result.success) {
             return result.fileContent as IBankAccountCredentails[];
         } else {
@@ -38,6 +39,8 @@ async function readBankAccountCredentialsFromStorage(userSettings: IUserSettings
 
 async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentails[], userSettings: IUserSettings): Promise<void> {
     const workspacePath = userSettings.WorkspacePath;
+    const encryptionKey = userSettings.EncryptionKey; 
+
     if (!workspacePath) {
         console.error('Workspace path not found');
         alert('Workspace path not found');
@@ -45,7 +48,7 @@ async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentail
     }
 
     try {
-        const result = await window.api.writeBankAccountCredentialsFile(workspacePath, data);
+        const result = await window.api.writeBankAccountCredentialsFile(workspacePath, data, encryptionKey);
         if (result.success) {
             console.log('Bank account credentials data written successfully');
         } else {
