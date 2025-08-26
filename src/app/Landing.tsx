@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Tabs, Tab, IconButton, Tooltip, Modal } from '@mui/material';
+import { Box, Tabs, Tab, IconButton, Tooltip, Modal, Button, Paper, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DrawerMenu from './common-components/drawer-menu-component';
 import BankAccountCredentialListComponent from './bank-account-credentail-components/bank-account-credentails-list-component';
@@ -9,6 +9,8 @@ import SettingsComponent from './settings-components/settings-component';
 import AddApplicationCredentialsComponent from './application-credentail-components/add-application-credentails-component';
 import { useUserSettings } from './services/user-settings-context';
 import { IUserSettings } from '../entities/db-entities/user-settings';
+import RichTextEditor from './notes-components/rich-text-editor';
+import NotesListComponent from './notes-components/notes-list-component';
 
 async function readBankAccountDataFromStorage(userSettings: IUserSettings): Promise<IBankAccountCredentails[]> {
   const workspacePath = userSettings.WorkspacePath;
@@ -59,6 +61,8 @@ const Landing: React.FC = () => {
   const [bankData, setBankData] = React.useState<IBankAccountCredentails[]>([]);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [breadcrumb, setBreadcrumb] = React.useState<string[]>(["Home"]);
+  const [notes, setNotes] = React.useState<string>('');
+  const [showNotesEditor, setShowNotesEditor] = React.useState(false);
   const userSettings = useUserSettings();
   
   useEffect(() => {
@@ -121,9 +125,12 @@ const Landing: React.FC = () => {
       <Tabs value={tab} onChange={(_e, v) => setTab(v)} centered>
         <Tab label="Bank Account Credentials" />
         <Tab label="Application Credentials" />
+        <Tab label="Notes" />
       </Tabs>
       {tab === 0 && <BankAccountCredentialListComponent />}
       {tab === 1 && <ApplicationCredentialsListComponent />}
+      {tab === 2 && <NotesListComponent />}
+      
     </Box>
 
     
