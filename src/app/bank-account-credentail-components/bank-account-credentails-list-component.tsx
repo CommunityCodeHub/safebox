@@ -188,8 +188,7 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
     };
 
     const onEditBankAccountDetails = (idx: number) => {
-        var rows = bankAccountDetailsList.filter((item: any)=>item.id == idx); 
-        openEditBankAccountCredentailsModal(rows[0], idx);
+        openEditBankAccountCredentailsModal(bankAccountDetailsList[idx], idx);
     };
 
     const fetchBankAccountCredentailsData = async () => {
