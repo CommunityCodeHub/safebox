@@ -73,3 +73,4 @@ import './main/userLogin';
 import './main/bank-account-file-manager';
 import './main/utils-functions'; 
 import './main/user-settings';
+import './main/notes-file-manager'; 

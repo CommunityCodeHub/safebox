@@ -26,6 +26,14 @@ contextBridge.exposeInMainWorld('api', {
   writeUserSettingsFile: (data: IUserSettings) =>
     ipcRenderer.invoke('write-user-settings-file', { data }),
 
+  // Notes methods
+  writeNotePage: (workspacePath: string, pageTitle: string, content: string, encryptionKey: string) =>
+    ipcRenderer.invoke('write-note-page', { workspacePath, pageTitle, content, encryptionKey }),
+  readNotePage: (workspacePath: string, pageTitle: string, encryptionKey: string) =>
+    ipcRenderer.invoke('read-note-page', { workspacePath, pageTitle, encryptionKey }),
+  listNotePages: (workspacePath: string) =>
+    ipcRenderer.invoke('list-note-pages', { workspacePath }),
+
 });
 
 
