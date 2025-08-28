@@ -22,6 +22,7 @@ const createMainWindow = (): void => {
     show: false,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      nodeIntegration: true
     },
     autoHideMenuBar: false,
     icon: path.join(__dirname, "assets", "images", 'safebox.png'),
@@ -75,3 +76,4 @@ import './main/utils-functions';
 import './main/user-settings';
 import './main/notes-file-manager'; 
 import './main/logger-ipc';
+import './main/directory-browser'; 

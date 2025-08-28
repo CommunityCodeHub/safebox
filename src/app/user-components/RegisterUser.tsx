@@ -1,6 +1,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, Alert, InputAdornment, IconButton, Tooltip } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 // Helper to generate a GUID
 function generateGuid() {
@@ -76,6 +77,17 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               onChange={e => setUsername(e.target.value)}
               autoFocus
               required
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title="Enter a unique username for your account.">
+                        <IconButton tabIndex={-1} edge="end">
+                          <InfoOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
             />
             <TextField
               label="Password"
@@ -86,6 +98,17 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title="Password must be at least 8 characters, include one uppercase letter, one number, and one special character.">
+                        <IconButton tabIndex={-1} edge="end">
+                          <InfoOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
             />
             <TextField
               label="Confirm Password"
@@ -96,6 +119,49 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
               required
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title="Re-enter your password to confirm.">
+                        <IconButton tabIndex={-1} edge="end">
+                          <InfoOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+            />
+            <TextField
+              label="Workspace Folder Path"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={workspacePath}
+              onChange={e => setWorkspacePath(e.target.value)}
+              required
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                      <Tooltip title="The folder where your encrypted data files will be saved. Ideally, choose or create a folder within a cloud storage service such as OneDrive or Google Drive that is synced with your computer. This helps ensure your data remains safe and accessible even if something happens to your computer.">
+                        <IconButton tabIndex={-1} edge="end">
+                          <InfoOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    <IconButton
+                      aria-label="browse folder"
+                      onClick={async () => {
+                        const result: any = await window.api.showDirectoryBrowser();
+                        if (result.success) {
+                          setWorkspacePath(result.folderPath);
+                        }
+                      }}
+                      edge="end"
+                    >
+                      <FolderOpenIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               label="Encryption Key"
@@ -109,6 +175,11 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
+                      <Tooltip title="This secret key is used to encrypt and decrypt your data. If you are accessing the same cloud storage folder from another computer, make sure to use the same encryption key on this device to maintain compatibility and access your data securely.">
+                        <IconButton tabIndex={-1} edge="end">
+                          <InfoOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
                     <Tooltip title="Generate Encryption Key">
                       <IconButton
                         aria-label="generate encryption key"
@@ -132,28 +203,7 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               }}
             />
           
-            <TextField
-              label="Workspace Folder Path"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={workspacePath}
-              onChange={e => setWorkspacePath(e.target.value)}
-              required
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="browse folder"
-                      onClick={() => fileInputRef.current?.click()}
-                      edge="end"
-                    >
-                      <FolderOpenIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+            
             <input
               type="file"
               ref={fileInputRef}

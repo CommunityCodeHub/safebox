@@ -44,6 +44,8 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('read-note-page', { workspacePath, pageTitle, encryptionKey }),
   listNotePages: (workspacePath: string) =>
     ipcRenderer.invoke('list-note-pages', { workspacePath }),
+  showDirectoryBrowser: (): Promise<string | undefined> =>
+    ipcRenderer.invoke('show-directory-browser'),
 
 });
 

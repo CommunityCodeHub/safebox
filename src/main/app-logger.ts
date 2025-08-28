@@ -48,6 +48,10 @@ export class AppLogger {
     const timestamp = new Date().toISOString();
     const logLine = `[${timestamp}] [${level.toUpperCase()}] ${message}\n`;
     fs.appendFileSync(this.logFile, logLine, 'utf-8');
+    if (level === 'error'){
+      console.error(logLine);
+    }
+    
   }
 
   error(message: string) {

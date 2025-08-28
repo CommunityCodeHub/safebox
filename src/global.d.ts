@@ -16,6 +16,8 @@ declare global {
   writeNotePage: (workspacePath: string, pageTitle: string, content: string, encryptionKey: string) => Promise<any>;
   readNotePage: (workspacePath: string, pageTitle: string, encryptionKey: string) => Promise<any>;
   listNotePages: (workspacePath: string) => Promise<any>;
+
+  showDirectoryBrowser: () => Promise<string | undefined>; 
   // Logging methods
   setLogLevel: (level: string) => Promise<any>;
   logMessage: (level: string, message: string) => Promise<any>;
