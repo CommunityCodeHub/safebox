@@ -6,6 +6,10 @@ SafeBox is a secure, modern desktop application for managing sensitive credentia
 
 - **Bank Account Credential Management**: Store, view, and edit bank account details securely.
 - **Application Credential Management**: Manage logins for various applications with password masking and copy-to-clipboard.
+- **Notes/OneNote-like Feature**: Create, edit, and organize rich text notes with a multi-page, OneNote-style interface. Each note page is fully isolated and uses a modern, robust rich text editor (Lexical-based) supporting headings, lists, underline, and more.
+- **Automatic Logout After Inactivity**: Users are automatically logged out after 15 minutes of inactivity (mouse, keyboard, or scroll). Any user activity resets the timer, ensuring security for unattended sessions.
+- **Centralized Logging System**: All errors, traces, and metrics are logged to a single application log file in the system temp directory. Log level is configurable for development or production needs.
+- **Improved Error Handling**: All exceptions in both main and renderer processes are logged for robust debugging and auditing. Try/catch blocks throughout the codebase ensure no error goes unnoticed.
 - **Strong Encryption**: All sensitive data is encrypted at rest using AES-256-GCM via a user-provided encryption key.
 - **User Registration & Login**: Secure onboarding with strong password and encryption key requirements.
 - **Workspace Folder**: Choose a custom folder for storing your encrypted data files.
@@ -14,6 +18,21 @@ SafeBox is a secure, modern desktop application for managing sensitive credentia
 - **Settings Panel**: Change your workspace folder path and encryption key at any time.
 - **Material UI DataGrid**: Modern, responsive tables with masked/copyable fields and clickable URLs.
 - **Cross-Platform**: Runs on Windows, macOS, and Linux.
+
+## Centralized Logging System
+
+- **Single Log File**: All errors, traces, and metrics are written to a single `application.log` file in the system temp directory for easy access and troubleshooting.
+- **Configurable Log Level**: Log level (error, trace, metric, etc.) can be set at runtime via the Settings panel or programmatically, allowing for detailed logs in development and concise logs in production.
+- **Robust Error/Trace/Metric Logging**: The logging API is exposed to the renderer via `window.api.logError`, `logMessage`, `logTrace`, and `logMetric` (no workspacePath required). All exceptions and important actions are logged automatically.
+- **Improved Error Handling**: All try/catch blocks in both main and renderer processes log exceptions, ensuring no error is missed and making debugging/auditing easier.
+
+## Notes/OneNote-like Feature
+
+- **Multi-Page Notes**: Organize your notes in a OneNote-style sidebar with the ability to add, rename, and delete pages. Each page is fully isolated.
+- **Modern Rich Text Editor**: Notes use a Lexical-based editor supporting headings, lists, underline, and more. Includes a custom toolbar and save confirmation feedback.
+- **Per-Page Content Isolation**: Each note page maintains its own content, ensuring changes in one page do not affect others.
+- **User Feedback**: Save actions provide confirmation messages for a desktop-like experience.
+
 
 ## Security
 - All credential data is encrypted using AES-256-GCM with a key derived from your encryption key (never stored in plaintext).
@@ -55,9 +74,11 @@ yarn build
 
 ### Usage
 - On first launch, register a new user with a strong password, workspace folder, and encryption key.
-- After login, use the tabs to manage bank and application credentials.
+- After login, use the tabs to manage bank and application credentials, and to create and organize notes.
 - Use the drawer menu (top left) for Settings and Logout.
 - All data is stored encrypted in your chosen workspace folder.
+- You will be automatically logged out after 15 minutes of inactivity (any mouse, keyboard, or scroll activity resets the timer).
+- All errors and important actions are logged to the application log file for security and troubleshooting.
 
 ## Screenshots
 

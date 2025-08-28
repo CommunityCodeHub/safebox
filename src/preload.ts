@@ -6,6 +6,17 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { IUserSettings } from './entities/db-entities/user-settings';
 
 contextBridge.exposeInMainWorld('api', {
+  // Logging methods
+  setLogLevel: (level: string) =>
+    ipcRenderer.invoke('set-log-level', { level }),
+  logMessage: (level: string, message: string) =>
+    ipcRenderer.invoke('log-message', { level, message }),
+  logError: (message: string) =>
+    ipcRenderer.invoke('log-error', { message }),
+  logTrace: (message: string) =>
+    ipcRenderer.invoke('log-trace', { message }),
+  logMetric: (message: string) =>
+    ipcRenderer.invoke('log-metric', { message }),
   registerUser: (username: string, password: string, workspacePath: string) =>
     ipcRenderer.invoke('register-user', { username, password, workspacePath }),
   readUserFile: (username: string, password: string, workspacePath: string) =>

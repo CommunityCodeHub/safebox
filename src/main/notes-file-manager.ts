@@ -2,8 +2,9 @@ import { ipcMain } from 'electron';
 import { StrongCrypto } from '../cryptography/cryptoUtils';
 import fs from 'fs';
 import path from 'path';
-import { Console } from 'console';
+
 import { ApplicationConstants } from '../entities/application.constants';
+import { AppLogger } from './app-logger';
 
 // Save a note page (encrypted)
 ipcMain.handle('write-note-page', async (_event, { workspacePath, pageTitle, content, encryptionKey }) => {
@@ -20,10 +21,11 @@ ipcMain.handle('write-note-page', async (_event, { workspacePath, pageTitle, con
       tag: encrypted.tag
     });
     fs.writeFileSync(filePath, encryptedPayload, 'utf-8');
-    console.log(`Note page saved: ${filePath}`);
+  AppLogger.getInstance().info(`Note page saved: ${filePath}`);
 
     return { success: true };
   } catch (err) {
+  AppLogger.getInstance().error('write-note-page: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });
@@ -48,6 +50,7 @@ ipcMain.handle('read-note-page', async (_event, { workspacePath, pageTitle, encr
     );
     return { content: decrypted, success: true };
   } catch (err) {
+  AppLogger.getInstance().error('read-note-page: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });
@@ -62,6 +65,7 @@ ipcMain.handle('list-note-pages', async (_event, { workspacePath }) => {
     const pageTitles = noteFiles.map(f => f.replace(/\.note$/, ''));
     return { pages: pageTitles, success: true };
   } catch (err) {
+  AppLogger.getInstance().error('list-note-pages: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });

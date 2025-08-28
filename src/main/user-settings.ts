@@ -2,21 +2,17 @@ import { app, ipcMain, safeStorage } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { IUserSettings } from './../entities/db-entities/user-settings';
+import { AppLogger } from './app-logger';
 import { ApplicationConstants } from '../entities/application.constants';
 
 ipcMain.handle('write-user-settings-file', async (_event, { data }) => {
+    var userSettingsFolderPath = "";
+    const appDataFolder = app.getPath('userData');
+    const logger = AppLogger.getInstance();
     try {
-                
-        
-        var userSettingsFolderPath = "";
-
-        const appDataFolder = app.getPath('userData');
-
-        console.log("AppDataFolder Path: " + appDataFolder);
-
+        logger.info("AppDataFolder Path: " + appDataFolder);
         userSettingsFolderPath = path.join(appDataFolder, 'SafeBoxAppData');
-
-        console.log("UserSettingsFolder Path: " + userSettingsFolderPath);
+        logger.info("UserSettingsFolder Path: " + userSettingsFolderPath);
 
         if (!fs.existsSync(userSettingsFolderPath)) {
             fs.mkdirSync(userSettingsFolderPath, { recursive: true });
@@ -37,17 +33,17 @@ ipcMain.handle('write-user-settings-file', async (_event, { data }) => {
             WorkspacePath: workspacePath,
         };
         const fileName = `${data.UserName}.config`;
-        console.log("UserSettings FileName: " + fileName);
+        logger.info("UserSettings FileName: " + fileName);
         const filePath = path.join(userSettingsFolderPath, fileName);
-        console.log("UserSettings FilePath: " + filePath);
+        logger.info("UserSettings FilePath: " + filePath);
 
         fs.writeFileSync(filePath, JSON.stringify(userSettings, null, 2), 'utf-8');
         
-        console.log("UserSettings written successfully.");
+        logger.info("UserSettings written successfully.");
 
         return { success: true, filePath };
     } catch (err) {
-        console.error("Error: " + err.message);
+        logger.error("Error: " + err.message);
         return { success: false, error: err instanceof Error ? err.message : String(err) };
     }
 });
@@ -56,25 +52,26 @@ ipcMain.handle('read-user-settings-file', async (_event, { username }) => {
     const appDataFolder = app.getPath('userData');
     const userSettingsFolderPath = path.join(appDataFolder, 'SafeBoxAppData');
     const filePath = path.join(userSettingsFolderPath, `${username}.config`);
-    console.log("UserSettings FilePath for read: " + filePath);
+    const logger = AppLogger.getInstance();
+    logger.info("UserSettings FilePath for read: " + filePath);
     if (!fs.existsSync(filePath)) {
         return { success: false, error: ApplicationConstants.Messages.USER_SETTINGS_FILE_NOT_FOUND };
     }
     try {
         const data: any = fs.readFileSync(filePath, 'utf-8');
-        console.log("UserSettings file read completed.");
+    logger.info("UserSettings file read completed.");
         const userSettingData = JSON.parse(data);
-        console.log("UserSettings JSON data parsed successfully. ");
+    logger.info("UserSettings JSON data parsed successfully. ");
         const userSettings: IUserSettings = {
             UserName: userSettingData.UserName,
             Password: safeStorage.decryptString(Buffer.from(userSettingData.Password, 'base64')),
             EncryptionKey: safeStorage.decryptString(Buffer.from(userSettingData.EncryptionKey, 'base64')),
             WorkspacePath: userSettingData.WorkspacePath,
         };
-        console.log("User settings read operation completed successfully.");
+    logger.info("User settings read operation completed successfully.");
         return { success: true, data: userSettings };
     } catch (error) {
-        console.error("Error: " + error.message);
+    logger.error("Error: " + error.message);
         return { success: false, error: ApplicationConstants.Messages.FAILED_TO_READ_USER_SETTINGS_FILE };
     }
 

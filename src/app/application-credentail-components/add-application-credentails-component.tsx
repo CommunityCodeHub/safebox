@@ -11,6 +11,7 @@ import AddAddtionalInfoComponent from '../common-components/add-additional-info-
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopy from '@mui/icons-material/ContentCopy';
+import { useUserSettings } from '../services/user-settings-context';
 
 interface ApplicationCredentialsComponentProps {
     onAddAppCredentails: (rec: IApplicationCredentials) => void;
@@ -21,6 +22,7 @@ interface ApplicationCredentialsComponentProps {
 }
 
 const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsComponentProps> = (props) => {
+    const userSettings = useUserSettings();
     var defaultAppCred: IApplicationCredentials = {
         ApplicationName: '',
         UserName: '',
@@ -53,9 +55,9 @@ const AddApplicationCredentialsComponent: React.FC<ApplicationCredentialsCompone
 
     const copyContentToClipBoard = (content: string) => {
         navigator.clipboard.writeText(content).then(() => {
-            console.log('Content copied to clipboard');
+            window.api.logMessage('info', 'Content copied to clipboard');
         }).catch((err) => {
-            console.error('Error copying content to clipboard:', err);
+            window.api.logError('Error copying content to clipboard: ' + (err instanceof Error ? err.message : String(err)));
         });
     };
 

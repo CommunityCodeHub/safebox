@@ -21,17 +21,16 @@ async function readApplicationCredentialsFromStorage(userSettings: IUserSettings
     const encryptionKey = userSettings.EncryptionKey; 
 
     if (!workspacePath) return [];
-
     try {
         const result = await window.api.readApplicationCredentialsFile(workspacePath, encryptionKey);
         if (result.success) {
             return result.fileContent as IApplicationCredentials[];
         } else {
-            console.error('Failed to read application credentials file:', result.error);
+            await window.api.logError('Failed to read application credentials file: ' + result.error);
             return [];
         }
     } catch (err) {
-        console.error('Error reading application credentials file:', err);
+        await window.api.logError('Error reading application credentials file: ' + (err instanceof Error ? err.message : String(err)));
         alert('Error reading application credentials file');
         return [];
     }
@@ -43,20 +42,19 @@ async function writeApplicationCredentialsToStorage(data: IApplicationCredential
     const encryptionKey = userSettings.EncryptionKey;
 
     if (!workspacePath) {
-        console.error('Workspace path not found');
+        await window.api.logError('Workspace path not found');
         alert('Workspace path not found');
         return;
     }
-
     try {
         const result = await window.api.writeApplicationCredentialsFile(workspacePath, data, encryptionKey);
         if (result.success) {
-            console.log('Application credentials data written successfully');
+            await window.api.logMessage('info', 'Application credentials data written successfully');
         } else {
-            console.error('Failed to write application credentials data:', result.error);
+            await window.api.logError('Failed to write application credentials data: ' + result.error);
         }
     } catch (err) {
-        console.error('Error writing application credentials file:', err);
+        await window.api.logError('Error writing application credentials file: ' + (err instanceof Error ? err.message : String(err)));
         alert('Error writing application credentials file');
     }
 }

@@ -21,17 +21,16 @@ async function readBankAccountCredentialsFromStorage(userSettings: IUserSettings
     const encryptionKey = userSettings.EncryptionKey; 
 
     if (!workspacePath) return [];
-
     try {
         const result = await window.api.readBankAccountCredentialsFile(workspacePath, encryptionKey);
         if (result.success) {
             return result.fileContent as IBankAccountCredentails[];
         } else {
-            console.error('Failed to read bank account credentials file:', result.error);
+                await window.api.logError('Failed to read bank account credentials file: ' + result.error);
             return [];
         }
     } catch (err) {
-        console.error('Error reading bank account credentials file:', err);
+            await window.api.logError('Error reading bank account credentials file: ' + (err instanceof Error ? err.message : String(err)));
         alert('Error reading bank account credentials file');
         return [];
     }
@@ -42,20 +41,19 @@ async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentail
     const encryptionKey = userSettings.EncryptionKey; 
 
     if (!workspacePath) {
-        console.error('Workspace path not found');
+            await window.api.logError('Workspace path not found');
         alert('Workspace path not found');
         return;
     }
-
     try {
         const result = await window.api.writeBankAccountCredentialsFile(workspacePath, data, encryptionKey);
         if (result.success) {
-            console.log('Bank account credentials data written successfully');
+                await window.api.logMessage('info', 'Bank account credentials data written successfully');
         } else {
-            console.error('Failed to write bank account credentials data:', result.error);
+                await window.api.logError('Failed to write bank account credentials data: ' + result.error);
         }
     } catch (err) {
-        console.error('Error writing bank account credentials file:', err);
+            await window.api.logError('Error writing bank account credentials file: ' + (err instanceof Error ? err.message : String(err)));
         alert('Error writing bank account credentials file');
     }
 }

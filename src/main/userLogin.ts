@@ -1,5 +1,6 @@
 import { ipcMain, safeStorage } from 'electron';
 import fs from 'fs';
+import { AppLogger } from './app-logger';
 import path from 'path';
 
 ipcMain.handle('read-user-file', async (_event, { username, password, workspacePath }) => {
@@ -19,6 +20,7 @@ ipcMain.handle('read-user-file', async (_event, { username, password, workspaceP
       return { success: true, valid: false };
     }
   } catch (err) {
+  AppLogger.getInstance().error('read-user-file: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });

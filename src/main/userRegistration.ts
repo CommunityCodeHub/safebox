@@ -2,7 +2,7 @@ import { ipcMain, safeStorage } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { StrongCrypto } from '../cryptography/cryptoUtils';
-import { Password, Work } from '@mui/icons-material';
+import { AppLogger } from './app-logger';
 
 // Register the IPC handler for user registration
 ipcMain.handle('register-user', async (_event, { username, password, workspacePath }) => {
@@ -27,6 +27,7 @@ ipcMain.handle('register-user', async (_event, { username, password, workspacePa
     fs.writeFileSync(filePath, JSON.stringify(out, null, 2), 'utf-8');
     return { success: true, filePath };
   } catch (err) {
+  AppLogger.getInstance().error('register-user: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });

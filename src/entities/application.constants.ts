@@ -3,7 +3,8 @@ export class ApplicationConstants {
         USER_SETTINGS_FILE: 'user-settings.json',
         BANK_ACCOUNT_CREDENTIALS_FILE: 'bank-account-credentials.json',
         APPLICATION_CREDENTIALS_FILE: 'application-credentials.json',
-        NOTES_FOLDER_NAME: 'notes'
+        NOTES_FOLDER_NAME: 'notes',
+        APPLICATION_LOG_FILE: 'application.log'
     };
     static readonly Messages = {
         USER_SETTINGS_FILE_NOT_FOUND: 'User settings file not found.',

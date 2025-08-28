@@ -12,10 +12,16 @@ declare global {
       openExternal: (url: string) => Promise<any>;
       readUserSettingsFile: (username: string) => Promise<any>;
       writeUserSettingsFile: (data: any) => Promise<any>;
-      // Notes methods
-      writeNotePage: (workspacePath: string, pageTitle: string, content: string, encryptionKey: string) => Promise<any>;
-      readNotePage: (workspacePath: string, pageTitle: string, encryptionKey: string) => Promise<any>;
-      listNotePages: (workspacePath: string) => Promise<any>;
+  // Notes methods
+  writeNotePage: (workspacePath: string, pageTitle: string, content: string, encryptionKey: string) => Promise<any>;
+  readNotePage: (workspacePath: string, pageTitle: string, encryptionKey: string) => Promise<any>;
+  listNotePages: (workspacePath: string) => Promise<any>;
+  // Logging methods
+  setLogLevel: (level: string) => Promise<any>;
+  logMessage: (level: string, message: string) => Promise<any>;
+  logError: (message: string) => Promise<any>;
+  logTrace: (message: string) => Promise<any>;
+  logMetric: (message: string) => Promise<any>;
     };
     versions: {
       node: () => string;

@@ -3,6 +3,7 @@ import { StrongCrypto } from '../cryptography/cryptoUtils';
 import fs from 'fs';
 import path from 'path';
 import { ApplicationConstants } from '../entities/application.constants';
+import { AppLogger } from './app-logger';
 
 
 ipcMain.handle('read-bank-account-credentials-file', async (_event, { workspacePath, encryptionKey }) => {
@@ -25,6 +26,7 @@ ipcMain.handle('read-bank-account-credentials-file', async (_event, { workspaceP
     );
     return { fileContent: JSON.parse(decrypted), success: true, valid: true };
   } catch (err) {
+  AppLogger.getInstance().error('read-bank-account-credentials-file: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });
@@ -48,6 +50,7 @@ ipcMain.handle('read-application-credentials-file', async (_event, { workspacePa
     );
     return { fileContent: JSON.parse(decrypted), success: true, valid: true };
   } catch (err) {
+  AppLogger.getInstance().error('read-application-credentials-file: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });
@@ -70,6 +73,7 @@ ipcMain.handle('write-bank-account-credentials-file', async (_event, { workspace
     fs.writeFileSync(filePath, encryptedPayload, 'utf-8');
     return { success: true };
   } catch (err) {
+  AppLogger.getInstance().error('write-bank-account-credentials-file: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });
@@ -92,6 +96,7 @@ ipcMain.handle('write-application-credentials-file', async (_event, { workspaceP
     fs.writeFileSync(filePath, encryptedPayload, 'utf-8');
     return { success: true };
   } catch (err) {
+  AppLogger.getInstance().error('write-application-credentials-file: ' + (err instanceof Error ? err.message : String(err)));
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });

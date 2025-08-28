@@ -8,6 +8,7 @@ import BasicDetailsComponent from "./basic-details-component";
 import { IExtensibleProperties } from "../../entities/db-entities/extensible-properties";
 import AdditionalInfoListComponent from "./additional-info-list";
 import CardDetailsComponent from './card-details-list-component'
+import { useUserSettings } from "../services/user-settings-context";
 interface IAddBankAccountCredentialsComponentProps {
     onAddBankAccountCredentials: (rec: IBankAccountCredentails) => void;
     onEditBankAccountCredentials: (rec: IBankAccountCredentails) => void;
@@ -18,6 +19,7 @@ interface IAddBankAccountCredentialsComponentProps {
 
 const AddBankAccountCredentialsComponent: React.FC<IAddBankAccountCredentialsComponentProps> = (props) => {
     // Component implementation
+    var userSettings = useUserSettings();
 
     const BasicDetailsComponentRef = useRef(null);
 
@@ -57,12 +59,12 @@ const AddBankAccountCredentialsComponent: React.FC<IAddBankAccountCredentialsCom
 
     const [form, setForm] = useState<IBankAccountCredentails>({ ...defaultBankAccountCredentails });
     const [addAddtionalInfoModalOpen, setAddAddtionalInfoModalOpen] = useState(false);
-    const copyContentToClipBoard = (content: string) => {
-        navigator.clipboard.writeText(content).then(() => {
-            console.log('Content copied to clipboard');
-        }).catch((err) => {
-            console.error('Error copying content to clipboard:', err);
-        });
+        const copyContentToClipboard = (content: string) => {
+            navigator.clipboard.writeText(content).then(() => {
+                window.api.logMessage('info', 'Content copied to clipboard');
+            }).catch((err) => {
+                window.api.logError('Error copying content to clipboard: ' + (err instanceof Error ? err.message : String(err)));
+            });
     };
 
     const onAdditionalInfoUpdate = (additionalInfo: IExtensibleProperties) => {
@@ -104,7 +106,7 @@ const AddBankAccountCredentialsComponent: React.FC<IAddBankAccountCredentialsCom
                         {params.row.value}
                     </div>
                     <div style={{ marginLeft: 'auto' }}>
-                        <IconButton color="secondary" title='Copy Value' onClick={() => copyContentToClipBoard(params.row.value)} aria-label="edit">
+                        <IconButton color="secondary" title='Copy Value' onClick={() => copyContentToClipboard(params.row.value)} aria-label="edit">
                             <ContentCopy />
                         </IconButton>
                     </div>
