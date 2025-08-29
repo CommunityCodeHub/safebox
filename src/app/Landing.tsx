@@ -5,6 +5,7 @@ import DrawerMenu from './common-components/drawer-menu-component';
 import BankAccountCredentialListComponent from './bank-account-credentail-components/bank-account-credentails-list-component';
 import ApplicationCredentialsListComponent from './application-credentail-components/application-credentails-list-component';
 import SettingsComponent from './settings-components/settings-component';
+import ChangePassword from './user-components/ChangePassword';
 import NotesListComponent from './notes-components/notes-list-component';
 
 
@@ -13,6 +14,7 @@ const Landing: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [breadcrumb, setBreadcrumb] = React.useState<string[]>(["Home"]);
   const [showSettingsModalDialog, setShowSettingsModalDialog] = React.useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = React.useState(false);
   
   return (
     <Box sx={{ width: '99vw', height: '99vh', bgcolor: '#f5f5f5', overflow: 'auto', position: 'relative' }}>
@@ -40,10 +42,18 @@ const Landing: React.FC = () => {
           setDrawerOpen(false);
           setShowSettingsModalDialog(true);
         }}
+        onChangePassword={() => {
+          setBreadcrumb(["Home", "Change Password"]);
+          setDrawerOpen(false);
+          setShowChangePasswordModal(true);
+        }}
         breadcrumb={breadcrumb}
       />
       <Modal open={showSettingsModalDialog} onClose={() => setShowSettingsModalDialog(false)}>
         <SettingsComponent onClose={() => setShowSettingsModalDialog(false)} />
+      </Modal>
+      <Modal open={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)}>
+        <ChangePassword open={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)} onChangePassword={() => {}} />
       </Modal>
       
       {/* Tabs and Content */}

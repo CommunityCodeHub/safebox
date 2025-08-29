@@ -2,16 +2,18 @@ import React from 'react';
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Breadcrumbs, Typography, Box } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LockResetIcon from '@mui/icons-material/LockReset';
 
 interface DrawerMenuProps {
   open: boolean;
   onClose: () => void;
   onLogout: () => void;
   onSettings: () => void;
+  onChangePassword: () => void;
   breadcrumb: string[];
 }
 
-const DrawerMenu: React.FC<DrawerMenuProps> = ({ open, onClose, onLogout, onSettings, breadcrumb }) => {
+const DrawerMenu: React.FC<DrawerMenuProps> = ({ open, onClose, onLogout, onSettings, onChangePassword, breadcrumb }) => {
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 250, p: 2 }}>
@@ -29,6 +31,14 @@ const DrawerMenu: React.FC<DrawerMenuProps> = ({ open, onClose, onLogout, onSett
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText primary="Settings" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={onChangePassword}>
+              <ListItemIcon>
+                <LockResetIcon />
+              </ListItemIcon>
+              <ListItemText primary="Change Password" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
