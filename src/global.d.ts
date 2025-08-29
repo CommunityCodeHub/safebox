@@ -17,6 +17,7 @@ declare global {
   readNotePage: (workspacePath: string, pageTitle: string, encryptionKey: string) => Promise<any>;
   listNotePages: (workspacePath: string) => Promise<any>;
 
+  isValidEncryptionKey(encryptionKey: string, workspacePath: string, username: string): Promise<any>;
   showDirectoryBrowser: () => Promise<string | undefined>; 
   // Logging methods
   setLogLevel: (level: string) => Promise<any>;
@@ -31,5 +32,7 @@ declare global {
       electron: () => string;
       customMethod: () => Promise<any>;
     };
+
+    
   }
 }

@@ -46,14 +46,10 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('list-note-pages', { workspacePath }),
   showDirectoryBrowser: (): Promise<string | undefined> =>
     ipcRenderer.invoke('show-directory-browser'),
+  isValidEncryptionKey: (encryptionKey: string, workspacePath: string, username: string): Promise<any> =>
+    ipcRenderer.invoke('is-valid-encryption-key', { encryptionKey, workspacePath, username }),
 
 });
 
 
-contextBridge.exposeInMainWorld('versions', {
-  node: () => process.versions.node,
-  chrome: () => process.versions.chrome,
-  electron: () => process.versions.electron,
-  customMethod: () => ipcRenderer.invoke('custom-method'),
-}); 
 

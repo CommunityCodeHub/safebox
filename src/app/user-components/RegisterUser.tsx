@@ -3,13 +3,7 @@ import React, { useState, useRef } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, Alert, InputAdornment, IconButton, Tooltip } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
-// Helper to generate a GUID
-function generateGuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
+import { v4 as uuidv4, validate as isValidUUID } from 'uuid';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
@@ -42,7 +36,7 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username || !password || !confirmPassword || !workspacePath || !encryptionKey) {
       setError('All fields are required.');
@@ -56,9 +50,50 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
       setError('Password must be at least 8 characters, include one uppercase letter, one number, and one special character.');
       return;
     }
+
+    const isUserAlreadyRegistered = await isUserRegistered(username);
+    if (isUserAlreadyRegistered) {
+      setError('User is already registered.');
+      return;
+    }
+
+    var isValid = await isValidEncryptionKey(encryptionKey, workspacePath, username);
+    if (!isValid) {
+      return;
+    }
+
     setError(null);
     onRegister(username, password, workspacePath, encryptionKey);
   };
+
+  const isValidEncryptionKey = async (encryptionKey: string, workspacePath: string, username: string): Promise<boolean> => {
+    if (!window.api || typeof window.api.isValidEncryptionKey !== 'function') {
+      setError('Encryption key validation API not available.');
+      return false;
+    }
+    const result = await window.api.isValidEncryptionKey(encryptionKey, workspacePath, username);
+    if (result.success) {
+      return true;
+    }
+
+    setError(result.error);
+    return false;
+  }
+
+
+  const isUserRegistered = async (username: string): Promise<boolean> => {
+    if (!window.api || typeof window.api.readUserSettingsFile !== 'function') {
+      setError('User registration API not available.');
+      return false;
+    }
+    const result = await window.api.readUserSettingsFile(username);
+    if (result.success) {
+      return true;
+    }
+
+    setError(result.error);
+    return false;
+  }
 
   return (
     <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="#f5f5f5">
@@ -77,17 +112,17 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               onChange={e => setUsername(e.target.value)}
               autoFocus
               required
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip title="Enter a unique username for your account.">
-                        <IconButton tabIndex={-1} edge="end">
-                          <InfoOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </InputAdornment>
-                  ),
-                }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Tooltip title="Enter a unique username for your account.">
+                      <IconButton tabIndex={-1} edge="end">
+                        <InfoOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               label="Password"
@@ -98,17 +133,17 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip title="Password must be at least 8 characters, include one uppercase letter, one number, and one special character.">
-                        <IconButton tabIndex={-1} edge="end">
-                          <InfoOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </InputAdornment>
-                  ),
-                }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Tooltip title="Password must be at least 8 characters, include one uppercase letter, one number, and one special character.">
+                      <IconButton tabIndex={-1} edge="end">
+                        <InfoOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               label="Confirm Password"
@@ -119,17 +154,17 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
               required
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip title="Re-enter your password to confirm.">
-                        <IconButton tabIndex={-1} edge="end">
-                          <InfoOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </InputAdornment>
-                  ),
-                }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Tooltip title="Re-enter your password to confirm.">
+                      <IconButton tabIndex={-1} edge="end">
+                        <InfoOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               label="Workspace Folder Path"
@@ -142,11 +177,11 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                      <Tooltip title="The folder where your encrypted data files will be saved. Ideally, choose or create a folder within a cloud storage service such as OneDrive or Google Drive that is synced with your computer. This helps ensure your data remains safe and accessible even if something happens to your computer.">
-                        <IconButton tabIndex={-1} edge="end">
-                          <InfoOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
+                    <Tooltip title="The folder where your encrypted data files will be saved. Ideally, choose or create a folder within a cloud storage service such as OneDrive or Google Drive that is synced with your computer. This helps ensure your data remains safe and accessible even if something happens to your computer.">
+                      <IconButton tabIndex={-1} edge="end">
+                        <InfoOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
                     <IconButton
                       aria-label="browse folder"
                       onClick={async () => {
@@ -175,15 +210,15 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                      <Tooltip title="This secret key is used to encrypt and decrypt your data. If you are accessing the same cloud storage folder from another computer, make sure to use the same encryption key on this device to maintain compatibility and access your data securely.">
-                        <IconButton tabIndex={-1} edge="end">
-                          <InfoOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
+                    <Tooltip title="This secret key is used to encrypt and decrypt your data. If you are accessing the same cloud storage folder from another computer, make sure to use the same encryption key on this device to maintain compatibility and access your data securely.">
+                      <IconButton tabIndex={-1} edge="end">
+                        <InfoOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
                     <Tooltip title="Generate Encryption Key">
                       <IconButton
                         aria-label="generate encryption key"
-                        onClick={() => setEncryptionKey(generateGuid())}
+                        onClick={() => setEncryptionKey(uuidv4())}
                         edge="end"
                       >
                         <AutorenewIcon />
@@ -202,8 +237,6 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
                 ),
               }}
             />
-          
-            
             <input
               type="file"
               ref={fileInputRef}
