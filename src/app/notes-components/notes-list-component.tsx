@@ -83,7 +83,9 @@ function NotesListComponent() {
 		if (!selectedPageId) return;
 		// Save encrypted content to file
 		const result = await window.api.writeNotePage(workspacePath, selectedPageId, content, encryptionKey);
-        
+        if(!result.success){
+			alert(`Failed to save note page: ${result.error}`);
+		}
 		setPages(pages.map(page => page.id === selectedPageId ? { ...page, content } : page));
 	};
 

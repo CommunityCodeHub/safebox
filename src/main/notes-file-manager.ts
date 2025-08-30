@@ -12,7 +12,8 @@ ipcMain.handle('write-note-page', async (_event, { workspacePath, pageTitle, con
     if (!encryptionKey) throw new Error('Encryption key is required');
     if (!pageTitle) throw new Error('Page title is required');
     const fileName = `${pageTitle}.note`;
-    const filePath = path.join(workspacePath, ApplicationConstants.FileNames.NOTES_FOLDER_NAME, fileName);
+    const directoryName = path.join(workspacePath, ApplicationConstants.FileNames.NOTES_FOLDER_NAME);
+    const filePath = path.join(directoryName, fileName);
     const crypto = new StrongCrypto(encryptionKey);
     const encrypted = crypto.encrypt(content);
     const encryptedPayload = JSON.stringify({
@@ -20,7 +21,14 @@ ipcMain.handle('write-note-page', async (_event, { workspacePath, pageTitle, con
       iv: encrypted.iv,
       tag: encrypted.tag
     });
+    if (!fs.existsSync(directoryName)){
+      // create directories recursevely. 
+      fs.mkdirSync(directoryName, {recursive: true}); 
+      console.log('Directory created successfully. ' + directoryName);
+
+    }
     fs.writeFileSync(filePath, encryptedPayload, 'utf-8');
+    console.log('Note page saved: ' + filePath);
   AppLogger.getInstance().info(`Note page saved: ${filePath}`);
 
     return { success: true };
