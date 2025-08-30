@@ -92,7 +92,7 @@ function NotesListComponent() {
 	const selectedPage = pages.find(page => page.id === selectedPageId);
 
 		return (
-			<Box display="flex" height="80vh" minHeight={500}>
+			<Box display="flex" height="80vh" >
 				{/* Left Sidebar */}
 				<Paper elevation={2} sx={{ width: 240, minWidth: 180, p: 1, display: 'flex', flexDirection: 'column', bgcolor: '#f7f7f7' }}>
 					<Box display="flex" alignItems="center" mb={1}>

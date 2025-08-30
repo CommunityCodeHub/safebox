@@ -118,12 +118,12 @@ function RegisterRichTextPlugin(): null {
       <Typography variant="h6" gutterBottom>
         Free Text Editor
       </Typography>
-      <Box mb={2} sx={{ minHeight: '70vh', border: '1px solid #ccc', borderRadius: 1, p: 1, bgcolor: '#fff' }}>
+      <Box mb={2} sx={{  border: '1px solid #ccc', borderRadius: 1, p: 1, bgcolor: '#fff' }}>
         <LexicalComposer initialConfig={initialConfig}>
           <RegisterRichTextPlugin />
           <ToolbarPlugin />
           <RichTextPlugin
-            contentEditable={<ContentEditable style={{ minHeight: '60vh', outline: 'none' }} />}
+            contentEditable={<ContentEditable style={{ minHeight: '50vh', outline: 'none' }} />}
             placeholder={<div style={{ color: '#aaa' }}>Write your notes here...</div>}
             ErrorBoundary={LexicalErrorBoundary}
           />
