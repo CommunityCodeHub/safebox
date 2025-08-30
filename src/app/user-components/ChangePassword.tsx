@@ -54,10 +54,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose, onChange
     const result = await window.api.writeUserSettingsFile(updatedUserSettings);
 
     if (result.success) {
-       alert(`Password updated successfully.`);
-        onClose(); 
+       //alert(`Password updated successfully.`);
+       window.api.showAlert('Password Updated Successfully', 'Password updated successfully.', 'info');
+       onClose();
     } else {
-        alert(`Failed to update password: ${result.error}`);
+        window.api.showAlert('Failed to Update Password', `Failed to update password: ${result.error}`, 'error');
     }
   };
 

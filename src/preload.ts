@@ -48,6 +48,10 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('show-directory-browser'),
   isValidEncryptionKey: (encryptionKey: string, workspacePath: string, username: string): Promise<any> =>
     ipcRenderer.invoke('is-valid-encryption-key', { encryptionKey, workspacePath, username }),
+  showAlert: (title: string, message: string, type: 'info' | 'warning' | 'error') =>
+    ipcRenderer.invoke('show-renderer-alert', { title, message, type }),
+  showConfirm: (title: string, message: string, type: 'info' | 'warning' | 'error') =>
+    ipcRenderer.invoke('show-renderer-confirm', { title, message, type }),
 
 });
 

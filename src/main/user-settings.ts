@@ -1,4 +1,4 @@
-import { app, ipcMain, safeStorage } from 'electron';
+import { app, ipcMain, ipcRenderer, safeStorage } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { IUserSettings } from './../entities/db-entities/user-settings';
@@ -21,7 +21,10 @@ ipcMain.handle('write-user-settings-file', async (_event, { data }) => {
         }
 
         if (!safeStorage.isEncryptionAvailable()) {
-            alert("Encryption is not available");
+            const title = "Encryption Not Available";
+            const message = "Encryption is not available";
+            const type = "error";
+            ipcRenderer.invoke('show-renderer-alert', { title, message, type });
         }
 
         const encryptedPassword = safeStorage.encryptString(data.Password); //crypto.encrypt(data);

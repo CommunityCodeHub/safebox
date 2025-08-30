@@ -97,12 +97,15 @@ const App: React.FC = () => {
 		}
 
 		if (result.error == ApplicationConstants.Messages.USER_SETTINGS_FILE_NOT_FOUND) {
-			window.confirm("It looks like your account is not yet registered for this application on this device. If you’ve already registered on some another device, please use the same UserName, Workspace Folder (Cloud Folder) and Encryption Key to register your account here as well.");
-			setShowRegister(true);
-			return;
+			//window.confirm("It looks like your account is not yet registered for this application on this device. If you’ve already registered on some another device, please use the same UserName, Workspace Folder (Cloud Folder) and Encryption Key to register your account here as well.");
+			const result = await window.api.showConfirm("Confirm Registration", "It looks like your account is not yet registered for this application on this device. If you’ve already registered on some another device, please use the same UserName, Workspace Folder (Cloud Folder) and Encryption Key to register your account here as well.", "warning");
+			if (result.response.response === 0) { // Ok
+				setShowRegister(true);
+				return;
+			}
 		}
 		if (result.error == ApplicationConstants.Messages.FAILED_TO_READ_USER_SETTINGS_FILE) {
-			alert("Failed to read user settings file. Please check application logs for details. ")
+			window.api.showAlert('Configuration Error', 'Failed to read user settings file. Please check application logs for details.', 'error');
 		}
 	}
 
@@ -118,6 +121,8 @@ const App: React.FC = () => {
 		if (password !== userSettings.Password) {
 			setLoginError('Incorrect password.');
 		}
+
+		//window.api.showAlert('Login Successful', 'You have successfully logged in.', 'info');
 
 		setIsUserLoggedIn(true);
 		sessionStorage.setItem('IsLoggedIn', 'true');
@@ -141,12 +146,12 @@ const App: React.FC = () => {
 				setUserSettings(userSettings);
 				setShowRegister(false);
 				setIsUserLoggedIn(false);
-				alert(`User Registration successful!. Please login to proceed.`);
+				window.api.showAlert('Registration Successful', 'User Registration successful!. Please login to proceed.', 'info');
 			} else {
-				alert(`Registration failed: ${result.error}`);
+				window.api.showAlert('Registration Failed', `Registration failed: ${result.error}`, 'error');
 			}
 		} else {
-			alert('Registration API not available.');
+			window.api.showAlert('Registration API Not Available', 'Registration API not available.', 'error');
 		}
 	};
 

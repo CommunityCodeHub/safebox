@@ -19,6 +19,8 @@ declare global {
 
   isValidEncryptionKey(encryptionKey: string, workspacePath: string, username: string): Promise<any>;
   showDirectoryBrowser: () => Promise<string | undefined>; 
+  showAlert: (title: string, message: string, type: 'info' | 'warning' | 'error') => Promise<any>;
+  showConfirm: (title: string, message: string, type: 'info' | 'warning' | 'error') => Promise<any>;
   // Logging methods
   setLogLevel: (level: string) => Promise<any>;
   logMessage: (level: string, message: string) => Promise<any>;

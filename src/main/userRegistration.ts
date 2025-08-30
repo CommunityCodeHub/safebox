@@ -1,4 +1,4 @@
-import { ipcMain, safeStorage } from 'electron';
+import { ipcMain, ipcRenderer, safeStorage } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { StrongCrypto } from '../cryptography/cryptoUtils';
@@ -13,7 +13,11 @@ ipcMain.handle('register-user', async (_event, { username, password, workspacePa
     //const data = JSON.stringify({ username, password, workspacePath });
     const data = password; 
     if (!safeStorage.isEncryptionAvailable()){
-        alert("Encryption is not available");
+        //alert("Encryption is not available");
+         const title = "Encryption Not Available";
+                    const message = "Encryption is not available";
+                    const type = "error";
+                    ipcRenderer.invoke('show-renderer-alert', { title, message, type });
     }
     const encryptedPassword = safeStorage.encryptString(password); //crypto.encrypt(data);
     
