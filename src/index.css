@@ -1,0 +1,30 @@
+/* Lexical underline formatting support */
+[data-lexical-text-underline] {
+  text-decoration: underline;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #e6e8ea 0%, #f4f6f8 100%);
+  color: #23272f;
+  min-height: 100vh;
+  min-width: 100vw;
+  box-sizing: border-box;
+}
+
+#root, #app, .MuiPaper-root {
+  border-radius: 12px;
+  box-shadow: 0 4px 24px 0 rgba(90,109,124,0.10);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #e6e8ea;
+}
+::-webkit-scrollbar-thumb {
+  background: #b0b8bc;
+  border-radius: 8px;
+}
