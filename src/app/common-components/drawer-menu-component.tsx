@@ -3,6 +3,7 @@ import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Bre
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LockResetIcon from '@mui/icons-material/LockReset';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 interface DrawerMenuProps {
   open: boolean;
@@ -10,10 +11,11 @@ interface DrawerMenuProps {
   onLogout: () => void;
   onSettings: () => void;
   onChangePassword: () => void;
+  onHelp?: () => void;
   breadcrumb: string[];
 }
 
-const DrawerMenu: React.FC<DrawerMenuProps> = ({ open, onClose, onLogout, onSettings, onChangePassword, breadcrumb }) => {
+const DrawerMenu: React.FC<DrawerMenuProps> = ({ open, onClose, onLogout, onSettings, onChangePassword, onHelp, breadcrumb }) => {
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 250, p: 2 }}>
@@ -41,6 +43,16 @@ const DrawerMenu: React.FC<DrawerMenuProps> = ({ open, onClose, onLogout, onSett
               <ListItemText primary="Change Password" />
             </ListItemButton>
           </ListItem>
+          {onHelp && (
+            <ListItem disablePadding>
+              <ListItemButton onClick={onHelp}>
+                <ListItemIcon>
+                  <HelpOutlineIcon />
+                </ListItemIcon>
+                <ListItemText primary="Help" />
+              </ListItemButton>
+            </ListItem>
+          )}
           <ListItem disablePadding>
             <ListItemButton onClick={onLogout}>
               <ListItemIcon>

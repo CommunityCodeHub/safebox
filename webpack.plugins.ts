@@ -14,4 +14,11 @@ export const plugins = [
             // { from: 'src/static', to: 'static' },
           ],
         }),
+   new CopyWebpackPlugin({
+          patterns: [
+            { from: 'src/app/help', to: 'assets/help' }, // Copies all images from src/assets/images to dist/images
+            // You can add more patterns for other static assets if needed
+            // { from: 'src/static', to: 'static' },
+          ],
+        }),        
 ];

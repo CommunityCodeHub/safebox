@@ -7,6 +7,7 @@ import ApplicationCredentialsListComponent from './application-credentail-compon
 import SettingsComponent from './settings-components/settings-component';
 import ChangePassword from './user-components/ChangePassword';
 import NotesListComponent from './notes-components/notes-list-component';
+import HelpComponent from './help-component/help-component';
 
 
 const Landing: React.FC = () => {
@@ -15,7 +16,27 @@ const Landing: React.FC = () => {
   const [breadcrumb, setBreadcrumb] = React.useState<string[]>(["Home"]);
   const [showSettingsModalDialog, setShowSettingsModalDialog] = React.useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = React.useState(false);
-  
+  const [showHelpModal, setShowHelpModal] = React.useState(false);
+  const [readMeContent, setReadMeContent] = React.useState('');
+
+  // Handler to load ReadMe.md and show modal
+  const handleShowHelp = async () => {
+    try {
+      // Try to fetch ReadMe.md from public folder
+      const response = await fetch('/assets/help/help.md');
+      if (response.ok) {
+        const content = await response.text();
+        setReadMeContent(content);
+      } else {
+        setReadMeContent('Failed to load help content.');
+      }
+    } catch {
+      setReadMeContent('Failed to load help content.');
+    }
+    setShowHelpModal(true);
+    setDrawerOpen(false);
+  };
+
   return (
     <Box sx={{ width: '99vw', height: '99vh', bgcolor: '#f5f5f5', overflow: 'auto', position: 'relative' }}>
       {/* Drawer Menu Button */}
@@ -47,6 +68,7 @@ const Landing: React.FC = () => {
           setDrawerOpen(false);
           setShowChangePasswordModal(true);
         }}
+        onHelp={handleShowHelp}
         breadcrumb={breadcrumb}
       />
       <Modal open={showSettingsModalDialog} onClose={() => setShowSettingsModalDialog(false)}>
@@ -54,6 +76,11 @@ const Landing: React.FC = () => {
       </Modal>
       <Modal open={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)}>
         <ChangePassword open={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)} onChangePassword={() => {}} />
+      </Modal>
+      <Modal open={showHelpModal} onClose={() => setShowHelpModal(false)}>
+        <Box sx={{ p: 1, bgcolor: 'background.paper', maxWidth: '60vw', margin: '40px auto', borderRadius: 2, boxShadow: 3 }}>
+          <HelpComponent onClose={() => setShowHelpModal(false)} />
+        </Box>
       </Modal>
       
       {/* Tabs and Content */}
