@@ -23,7 +23,7 @@ const Landing: React.FC = () => {
   const handleShowHelp = async () => {
     try {
       // Try to fetch ReadMe.md from public folder
-      const response = await fetch('/assets/help/help.md');
+      const response = await fetch('/assets/help/about-safebox.md');
       if (response.ok) {
         const content = await response.text();
         setReadMeContent(content);

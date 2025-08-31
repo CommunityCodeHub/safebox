@@ -10,13 +10,13 @@ interface IHelpComponentProps {
 }
 
 const menuItems = [
-  { label: 'About SafeBox', file: 'help.md' },
+  { label: 'About SafeBox', file: 'about-safebox.md' },
   { label: 'Getting Started', file: 'getting-started.md' },
   { label: 'Features', file: 'features.md' },
   { label: 'Security', file: 'security.md' },
   { label: 'FAQ', file: 'faq.md' },
   { label: 'Contact', file: 'contact.md' },
-  
+
 ];
 
 const HelpComponent: React.FC<IHelpComponentProps> = (props) => {
@@ -64,7 +64,21 @@ const HelpComponent: React.FC<IHelpComponentProps> = (props) => {
         >
           <CloseIcon />
         </IconButton>
-        <ReactMarkdown>{helpContent}</ReactMarkdown>
+        <ReactMarkdown components={{
+          a: ({ href, children }) => (
+            <a
+              href={href}
+              onClick={e => {
+                e.preventDefault();
+                if (href) window.api.openExternal(href);
+              }}
+              style={{ color: '#1976d2', textDecoration: 'underline', cursor: 'pointer' }}
+            >
+              {children}
+            </a>
+          )
+        }}
+        >{helpContent}</ReactMarkdown>
       </Box>
     </Box>
   );

@@ -4,14 +4,50 @@ Welcome to SafeBox! This guide will help you set up and start using the applicat
 
 ## Installation
 
-1. Download and install SafeBox from the official website or your organization’s distribution channel.
+1. Download and install SafeBox from [github link](https://github.com/CommunityCodeHub/safebox).
 2. Launch the application after installation.
 
 ## Creating Your Account
 
-1. Open SafeBox and click on the **Register** button.
-2. Enter your desired username and a strong password.
-3. Click **Register** to create your account.
+## SafeBox Registration Guide
+
+1. Open **SafeBox** and click on the **Register** button in the login popup window.  
+
+2. Enter your desired **Username**.  
+   - It may include letters, numbers, hyphens (-), and underscores (_).  
+   - Choose something easy to remember, such as your first name or combination of first name and last name.  
+
+3. Create a strong **Password**.  
+   - Must include letters, numbers, and at least one special character.  
+   - Minimum length: 8 characters.  
+
+4. Re-enter the same password in the **Confirm Password** field.  
+   - If the values don’t match, an error will be displayed.  
+   - Password and Confirm Password must match.  
+
+5. Specify the **Workspace Folder Path**.  
+   - This is where SafeBox will save your encrypted data.  
+   - Recommended: create a dedicated folder exclusively for SafeBox.  
+   - Best practice: use a folder inside a cloud storage directory (e.g., OneDrive or Google Drive) synced with your device.  
+   - This ensures your data remains safe even if your device fails.  
+   - Use the folder icon in the Workspace field to browse and select the folder.  
+
+6. Set up your **Encryption Key** (your vault key).  
+   - SafeBox uses this to encrypt and decrypt your data.  
+   - You may enter any text, but a minimum length of **16 characters** is recommended.  
+   - For stronger security, click the **refresh icon** in the Encryption Key field to auto-generate a unique key.  
+   - You do **not** need to remember this key for the current device.  
+     - SafeBox encrypts and stores it locally in:  
+       ```
+       AppData\Roaming\safe-box\SafeBoxAppData
+       ```
+   - **Important:** Copy and store this key securely (e.g., in an external drive).  
+     - Do **not** store it as plain text on cloud storage.  
+     - This key is required if you reinstall SafeBox or set it up on another device.  
+     - Without it, your previously stored data cannot be decrypted.  
+
+7. Click **Register** to complete account creation.  
+
 
 ## Logging In
 
