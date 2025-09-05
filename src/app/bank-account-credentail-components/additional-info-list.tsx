@@ -83,7 +83,7 @@ const AdditionalInfoListComponent: React.FC<IAddtionalInfoListComponentProps> = 
                     Add New
                 </Button>
             </Box>
-            <Box display="flex" alignItems="center" mb={2}>
+            <Box display="flex" alignItems="center" mb={2} style={{paddingTop: 2}}>
                 <DataGrid
                     rows={additionalInfoRows}
                     columns={additionalInfoColumns}
