@@ -102,7 +102,13 @@ const handleLogin = async (username: string, password: string) => {
             <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2, mb: 1 }}>
               Login
             </Button>
-            <Button variant="outlined" color="secondary" fullWidth sx={{ mb: 1 }} onClick={() => navigate('/register')}>
+            <Button
+              variant="outlined"
+              color="primary"
+              fullWidth
+              sx={{ mb: 1, fontWeight: 600, borderColor: 'primary.main', color: 'primary.main', background: '#f3f6fa', '&:hover': { background: '#e3f2fd', borderColor: 'primary.dark', color: 'primary.dark' } }}
+              onClick={() => navigate('/register')}
+            >
               Register
             </Button>
             {(localError) && (

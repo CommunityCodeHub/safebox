@@ -249,7 +249,7 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
     return (
         <Box p={2} sx={{ height: 400, width: '98%' }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">Bank Account Credentials</Typography>
+                <Typography variant="h6">Application Details</Typography>
                 <Button variant="contained" color="primary" onClick={() => openAddApplicationCredentailsModal()}>Add New</Button>
             </Box>
             <DataGrid

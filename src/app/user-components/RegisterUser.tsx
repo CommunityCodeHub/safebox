@@ -279,7 +279,13 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
             <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2, mb: 1 }}>
               Register
             </Button>
-            <Button variant="text" color="secondary" fullWidth sx={{ mb: 1 }} onClick={() => navigate('/login')}>
+            <Button
+              variant="outlined"
+              color="primary"
+              fullWidth
+              sx={{ mb: 1, fontWeight: 600, borderColor: 'primary.main', color: 'primary.main', background: '#f3f6fa', '&:hover': { background: '#e3f2fd', borderColor: 'primary.dark', color: 'primary.dark' } }}
+              onClick={() => navigate('/login')}
+            >
               Back to Login
             </Button>
             {error && (

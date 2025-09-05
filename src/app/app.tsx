@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider, CssBaseline } from '@mui/material';
-import theme from '../theme';
+import windowsFileManagerTheme from '../theme/windowsFileManagerTheme';
 import Login from './user-components/Login';
 import RegisterUser from './user-components/RegisterUser';
 import Landing from './Landing';
@@ -122,8 +122,8 @@ const App: React.FC = () => {
 		}
 	}
 
-	return (
-		<ThemeProvider theme={theme}>
+		return (
+			<ThemeProvider theme={windowsFileManagerTheme}>
 			<CssBaseline />
 					<Routes>
 						{/* Protected routes */}

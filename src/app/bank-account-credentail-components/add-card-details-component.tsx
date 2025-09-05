@@ -44,8 +44,8 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
     return (
         <Paper sx={{ p: 4, maxWidth: 500, mx: 'auto', my: 4 }}>
             <Typography variant="h6" mb={2}>Card Details</Typography>
-            <Grid container spacing={2}>
-                <Grid>
+            <Grid container spacing={2} direction="column">
+                <Grid size={{ xs: 12 }}>
                     <TextField
                         label="Card Name"
                         name="CardName"
@@ -56,7 +56,7 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                         size="small"
                     />
                 </Grid>
-                <Grid>
+                <Grid size={{ xs: 12 }}>
                     <TextField
                         label="Card Holder Name"
                         name="CardHolderName"
@@ -67,7 +67,7 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                         size="small"
                     />
                 </Grid>
-                <Grid>
+                <Grid size={{ xs: 12 }}>
                     <TextField
                         label="Card Number"
                         name="CardNumber"
@@ -96,7 +96,7 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                         inputProps={{ maxLength: 19 }}
                     />
                 </Grid>
-                <Grid>
+                <Grid size={{ xs: 12 }}>
                     <TextField
                         label="Expiry Date (MM/YY)"
                         name="ExpiryDate"
@@ -121,7 +121,7 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                         inputProps={{ maxLength: 5 }}
                     />
                 </Grid>
-                <Grid>
+                <Grid size={{ xs: 12 }}>
                     <TextField
                         label="CVV"
                         name="CVV"
@@ -147,18 +147,7 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                         }}
                     />
                 </Grid>
-                <Grid>
-                    <TextField
-                        label="Issuing Bank"
-                        name="IssuingBank"
-                        value={cardDetailsObject.IssuingBank}
-                        onChange={onHtmlInputChange}
-                        required
-                        fullWidth
-                        size="small"
-                    />
-                </Grid>
-                <Grid>
+                <Grid size={{ xs: 12 }}>
                     <TextField
                         label="PIN"
                         name="Pin"
@@ -184,13 +173,31 @@ const AddCardDetailsComponent: React.FC<IAddCardDetailsComponentProps> = (props)
                         }}
                     />
                 </Grid>
+                <Grid size={{ xs: 12 }}>
+                    <TextField
+                        label="Issuing Bank"
+                        name="IssuingBank"
+                        value={cardDetailsObject.IssuingBank}
+                        onChange={onHtmlInputChange}
+                        required
+                        fullWidth
+                        size="small"
+                    />
+                </Grid>
                 {/* AdditionalInfo can be handled with a custom component if needed */}
             </Grid>
             <Box mt={3} display="flex" justifyContent="flex-end" gap={2}>
-                <Button type="button" variant="outlined" color="secondary" onClick={props.onClose}>Cancel</Button>
+                <Button
+                    type="button"
+                    variant="outlined"
+                    color="primary"
+                    onClick={props.onClose}
+                    sx={{ fontWeight: 600, borderColor: 'primary.main', color: 'primary.main', background: '#f3f6fa', '&:hover': { background: '#e3f2fd', borderColor: 'primary.dark', color: 'primary.dark' } }}
+                >
+                    Cancel
+                </Button>
                 <Button type="button" variant="contained" color="primary" onClick={onSaveCardDetails}>Save</Button>
             </Box>
-
         </Paper>
     );
 }

@@ -142,7 +142,12 @@ function RegisterRichTextPlugin(): null {
         </Box>
         <Box display="flex" gap={2}>
           {onCancel && (
-            <Button variant="outlined" color="secondary" onClick={onCancel}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={onCancel}
+              sx={{ fontWeight: 600, borderColor: 'primary.main', color: 'primary.main', background: '#f3f6fa', '&:hover': { background: '#e3f2fd', borderColor: 'primary.dark', color: 'primary.dark' } }}
+            >
               Cancel
             </Button>
           )}

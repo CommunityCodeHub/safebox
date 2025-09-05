@@ -1,39 +1,22 @@
 import React from 'react';
-import { Box, IconButton, Tooltip } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import DrawerMenu from './common-components/drawer-menu-component';
+import { Box } from '@mui/material';
+import SidebarMenu from './common-components/sidebar-menu-component';
 import { Outlet } from 'react-router-dom';
 
 
 const Landing: React.FC = () => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [breadcrumb, setBreadcrumb] = React.useState<string[]>(["Home"]);
     
 
   return (
-    <Box sx={{ width: '99vw', height: '99vh', bgcolor: '#f5f5f5', overflow: 'auto', position: 'relative' }}>
-      {/* Drawer Menu Button */}
-      <Tooltip title="Menu">
-        <IconButton
-          color="primary"
-          sx={{ position: 'absolute', top: 8, left: 16, zIndex: 20 }}
-          onClick={() => setDrawerOpen(true)}
-          aria-label="menu"
-        >
-          <MenuIcon />
-        </IconButton>
-      </Tooltip>
-      {/* Drawer Menu */}
-      <DrawerMenu
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+    <Box sx={{ display: 'flex', width: '100vw', height: '100vh', bgcolor: '#f5f5f5', overflow: 'hidden', position: 'relative' }}>
+      <SidebarMenu
         onLogout={() => {
           sessionStorage.clear();
           window.location.reload();
         }}
-        breadcrumb={breadcrumb}
       />
-      <Box sx={{ mt: 6 }}>
+      <Box sx={{ flex: 1, height: '100vh', pt: 0, mt: 3, overflow: 'auto', ml: { xs: '32px', sm: '32px', md: '110px', lg: '110px' } }}>
         <Outlet />
       </Box>
     </Box>

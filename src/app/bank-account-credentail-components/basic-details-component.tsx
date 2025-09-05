@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem, Select, TextField, IconButton, InputAdornment } from "@mui/material";
+import { Box, Grid, MenuItem, Select, TextField, IconButton, InputAdornment, FormControl, InputLabel } from "@mui/material";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React from "react";
@@ -100,22 +100,24 @@ const BasicDetailsComponent = React.forwardRef<BasicDetailsComponentHandle, IBas
                             sx={{ flex: 1 }} />
                     </Box>
                     <Box display="flex" alignItems="center" mb={2}>
-                        <Select
-                            label="Account Type"
-                            name="AccountType"
-                            value={basicAccountDetailsState.AccountType}
-                            onChange={ onAccountTypeDropdownValueChange}
-                            required
-                            size="small"
-                            sx={{ flex: 1 }}
-                            displayEmpty>
-                            <MenuItem value=""><em>Select Account Type</em></MenuItem>
-                            {Object.values(AccountType).map((type) => (
-                                <MenuItem key={type} value={type} selected={basicAccountDetailsState.AccountType === type}>{type}</MenuItem>
-                            ))}
-                            <MenuItem key="Other" value="Other">Other</MenuItem>
-                        </Select>
-                        {((showAccountTypeTextBox)) && (
+                        <FormControl fullWidth size="small" required sx={{ flex: 1 }}>
+                            <InputLabel id="account-type-label">Account Type</InputLabel>
+                            <Select
+                                // labelId="account-type-label"
+                                // label="Account Type"
+                                name="AccountType"
+                                value={basicAccountDetailsState.AccountType}
+                                onChange={onAccountTypeDropdownValueChange}
+                                displayEmpty
+                            >
+                                <MenuItem value=""></MenuItem>
+                                {Object.values(AccountType).map((type) => (
+                                    <MenuItem key={type} value={type}>{type}</MenuItem>
+                                ))}
+                                <MenuItem key="Other" value="Other">Other</MenuItem>
+                            </Select>
+                        </FormControl>
+                        {showAccountTypeTextBox && (
                             <TextField
                                 label="Other Account Type"
                                 name="OtherAccountType"
