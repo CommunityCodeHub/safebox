@@ -1,41 +1,14 @@
 import React from 'react';
-import { Box, Tabs, Tab, IconButton, Tooltip, Modal } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DrawerMenu from './common-components/drawer-menu-component';
-import BankAccountCredentialListComponent from './bank-account-credentail-components/bank-account-credentails-list-component';
-import ApplicationCredentialsListComponent from './application-credentail-components/application-credentails-list-component';
-import SettingsComponent from './settings-components/settings-component';
-import ChangePassword from './user-components/ChangePassword';
-import NotesListComponent from './notes-components/notes-list-component';
-import HelpComponent from './help-component/help-component';
+import { Outlet } from 'react-router-dom';
 
 
 const Landing: React.FC = () => {
-  const [tab, setTab] = React.useState(0);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [breadcrumb, setBreadcrumb] = React.useState<string[]>(["Home"]);
-  const [showSettingsModalDialog, setShowSettingsModalDialog] = React.useState(false);
-  const [showChangePasswordModal, setShowChangePasswordModal] = React.useState(false);
-  const [showHelpModal, setShowHelpModal] = React.useState(false);
-  const [readMeContent, setReadMeContent] = React.useState('');
-
-  // Handler to load ReadMe.md and show modal
-  const handleShowHelp = async () => {
-    try {
-      // Try to fetch ReadMe.md from public folder
-      const response = await fetch('/assets/help/about-safebox.md');
-      if (response.ok) {
-        const content = await response.text();
-        setReadMeContent(content);
-      } else {
-        setReadMeContent('Failed to load help content.');
-      }
-    } catch {
-      setReadMeContent('Failed to load help content.');
-    }
-    setShowHelpModal(true);
-    setDrawerOpen(false);
-  };
+    
 
   return (
     <Box sx={{ width: '99vw', height: '99vh', bgcolor: '#f5f5f5', overflow: 'auto', position: 'relative' }}>
@@ -58,44 +31,12 @@ const Landing: React.FC = () => {
           sessionStorage.clear();
           window.location.reload();
         }}
-        onSettings={() => {
-          setBreadcrumb(["Home", "Settings"]);
-          setDrawerOpen(false);
-          setShowSettingsModalDialog(true);
-        }}
-        onChangePassword={() => {
-          setBreadcrumb(["Home", "Change Password"]);
-          setDrawerOpen(false);
-          setShowChangePasswordModal(true);
-        }}
-        onHelp={handleShowHelp}
         breadcrumb={breadcrumb}
       />
-      <Modal open={showSettingsModalDialog} onClose={() => setShowSettingsModalDialog(false)}>
-        <SettingsComponent onClose={() => setShowSettingsModalDialog(false)} />
-      </Modal>
-      <Modal open={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)}>
-        <ChangePassword open={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)} onChangePassword={() => {}} />
-      </Modal>
-      <Modal open={showHelpModal} onClose={() => setShowHelpModal(false)}>
-        <Box sx={{ p: 1, bgcolor: 'background.paper', maxWidth: '60vw', margin: '40px auto', borderRadius: 2, boxShadow: 3 }}>
-          <HelpComponent onClose={() => setShowHelpModal(false)} />
-        </Box>
-      </Modal>
-      
-      {/* Tabs and Content */}
-      <Tabs value={tab} onChange={(_e, v) => setTab(v)} centered>
-        <Tab label="Bank Account Credentials" />
-        <Tab label="Application Credentials" />
-        <Tab label="Notes" />
-      </Tabs>
-      {tab === 0 && <BankAccountCredentialListComponent />}
-      {tab === 1 && <ApplicationCredentialsListComponent />}
-      {tab === 2 && <NotesListComponent />}
-      
+      <Box sx={{ mt: 6 }}>
+        <Outlet />
+      </Box>
     </Box>
-
-    
   );
 };
 

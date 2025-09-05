@@ -1,12 +1,14 @@
 
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Card, CardContent, TextField, Typography, Alert, InputAdornment, IconButton, Tooltip } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
-import { v4 as uuidv4, validate as isValidUUID } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
+import { IUserSettings } from '../../entities/db-entities/user-settings';
 
 declare module 'react' {
   interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -16,8 +18,7 @@ declare module 'react' {
 }
 
 interface RegisterUserProps {
-  onRegister: (username: string, password: string, workspacePath: string, encryptionKey: string) => void;
-  onBackToLogin: () => void;
+
 }
 
 function isStrongPassword(password: string): boolean {
@@ -25,7 +26,30 @@ function isStrongPassword(password: string): boolean {
   return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/.test(password);
 }
 
-const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }) => {
+const registerUserAccount = async (username: string, password: string, workspacePath: string, encryptionKey: string, navigate: (path: string) => void) => {
+  if (window.api && typeof window.api.registerUser === 'function') {
+    var userSettings: IUserSettings = {
+      UserName: username,
+      Password: password,
+      WorkspacePath: workspacePath,
+      EncryptionKey: encryptionKey
+    }
+
+    const result = await window.api.writeUserSettingsFile(userSettings);
+    if (result.success) {
+      await window.api.showAlert('Registration Successful', 'User Registration successful!. Please login to proceed.', 'info');
+      navigate('/login');
+    } else {
+      await window.api.showAlert('Registration Failed', `Registration failed: ${result.error}`, 'error');
+    }
+  } else {
+    await window.api.logError("Registration API Not Available");
+    window.api.showAlert('Unhandled Exception', 'Some unknown error occured while registering user. Please check application logs for details.', 'error');
+  }
+};
+
+const RegisterUser: React.FC<RegisterUserProps> = (props) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -63,7 +87,7 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
     }
 
     setError(null);
-    onRegister(username, password, workspacePath, encryptionKey);
+  registerUserAccount(username, password, workspacePath, encryptionKey, navigate);
   };
 
   const isValidEncryptionKey = async (encryptionKey: string, workspacePath: string, username: string): Promise<boolean> => {
@@ -255,7 +279,7 @@ const RegisterUser: React.FC<RegisterUserProps> = ({ onRegister, onBackToLogin }
             <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2, mb: 1 }}>
               Register
             </Button>
-            <Button variant="text" color="secondary" fullWidth sx={{ mb: 1 }} onClick={onBackToLogin}>
+            <Button variant="text" color="secondary" fullWidth sx={{ mb: 1 }} onClick={() => navigate('/login')}>
               Back to Login
             </Button>
             {error && (

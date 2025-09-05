@@ -5,9 +5,7 @@ import { Box, IconButton, List, ListItemText, Divider, ListItemButton } from '@m
 import CloseIcon from '@mui/icons-material/Close';
 import ReactMarkdown from 'react-markdown';
 
-interface IHelpComponentProps {
-  onClose: () => void;
-}
+// No props needed when routed
 
 const menuItems = [
   { label: 'About SafeBox', file: 'about-safebox.md' },
@@ -19,7 +17,7 @@ const menuItems = [
 
 ];
 
-const HelpComponent: React.FC<IHelpComponentProps> = (props) => {
+const HelpComponent: React.FC = () => {
   const [helpContent, setHelpContent] = React.useState<string>('');
   const [activeMenu, setActiveMenu] = React.useState<string>(menuItems[0].label);
 
@@ -57,13 +55,7 @@ const HelpComponent: React.FC<IHelpComponentProps> = (props) => {
       </Box>
       {/* Right Panel: Static HTML Content */}
       <Box sx={{ flex: 1, p: 3, overflowY: 'auto', position: 'relative' }}>
-        <IconButton
-          aria-label="close"
-          onClick={props.onClose}
-          sx={{ position: 'absolute', top: 8, right: 8, zIndex: 10 }}
-        >
-          <CloseIcon />
-        </IconButton>
+  {/* No close button when routed */}
         <ReactMarkdown components={{
           a: ({ href, children }) => (
             <a
