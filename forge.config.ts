@@ -17,7 +17,12 @@ const config: ForgeConfig = {
     icon: './src/assets/images/safebox.png', // Electron Forge will use .ico/.icns/.png as needed
   },
   rebuildConfig: {force: true},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+  new MakerSquirrel({}), // Windows
+  new MakerZIP({}),      // macOS
+  new MakerDeb({}),      // Linux DEB
+  new MakerRpm({})       // Linux RPM
+],
   plugins: [
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
