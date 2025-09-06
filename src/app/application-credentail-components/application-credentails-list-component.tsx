@@ -31,7 +31,7 @@ async function readApplicationCredentialsFromStorage(userSettings: IUserSettings
         }
     } catch (err) {
         await window.api.logError('Error reading application credentials file: ' + (err instanceof Error ? err.message : String(err)));
-        alert('Error reading application credentials file');
+        window.api.showAlert('Error Reading Application Credentials File', 'Error reading application credentials file', 'error');
         return [];
     }
 }
@@ -43,7 +43,7 @@ async function writeApplicationCredentialsToStorage(data: IApplicationCredential
 
     if (!workspacePath) {
         await window.api.logError('Workspace path not found');
-        alert('Workspace path not found');
+        window.api.showAlert('Workspace Path Not Found', 'Workspace path not found', 'error');
         return;
     }
     try {
@@ -55,7 +55,7 @@ async function writeApplicationCredentialsToStorage(data: IApplicationCredential
         }
     } catch (err) {
         await window.api.logError('Error writing application credentials file: ' + (err instanceof Error ? err.message : String(err)));
-        alert('Error writing application credentials file');
+        window.api.showAlert('Error Writing Application Credentials File', 'Error writing application credentials file', 'error');
     }
 }
 
@@ -216,8 +216,9 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
     }
 
     const deleteApplicationCredentailRow = async (rec: IApplicationCredentials, idx: number) => {
-        var result = window.confirm("Are you sure you want to delete this record?");
-        if (result) {
+        //var result = window.confirm("Are you sure you want to delete this record?");
+        var result = await window.api.showConfirm("Confirm Deletion", "Are you sure you want to delete this record?", "warning");
+        if (result.response === 0) { //Ok
             applicationCredentailList.splice(idx, 1);
             setAppCredentialList(applicationCredentailList);
             await writeApplicationCredentialsToStorage(applicationCredentailList, userSettings);
@@ -248,7 +249,7 @@ const ApplicationCredentialsListComponent: React.FC<ApplicationCredentialsListCo
     return (
         <Box p={2} sx={{ height: 400, width: '98%' }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">Bank Account Credentials</Typography>
+                <Typography variant="h6">Application Details</Typography>
                 <Button variant="contained" color="primary" onClick={() => openAddApplicationCredentailsModal()}>Add New</Button>
             </Box>
             <DataGrid

@@ -31,7 +31,7 @@ async function readBankAccountCredentialsFromStorage(userSettings: IUserSettings
         }
     } catch (err) {
             await window.api.logError('Error reading bank account credentials file: ' + (err instanceof Error ? err.message : String(err)));
-        alert('Error reading bank account credentials file');
+        window.api.showAlert('Error Reading File', 'Error reading bank account credentials file', 'error');
         return [];
     }
 }
@@ -42,7 +42,8 @@ async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentail
 
     if (!workspacePath) {
             await window.api.logError('Workspace path not found');
-        alert('Workspace path not found');
+        //alert('Workspace path not found');
+        window.api.showAlert('Workspace Path Not Found', 'Workspace path not found', 'error');
         return;
     }
     try {
@@ -54,7 +55,7 @@ async function writeBankAccountCredentialsToStorage(data: IBankAccountCredentail
         }
     } catch (err) {
             await window.api.logError('Error writing bank account credentials file: ' + (err instanceof Error ? err.message : String(err)));
-        alert('Error writing bank account credentials file');
+        window.api.showAlert('Error Writing Bank Account Credentials File', 'Error writing bank account credentials file', 'error');
     }
 }
 
@@ -175,14 +176,18 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
     }
 
     const onDeleteBankAccountDetails = async (rec: IBankAccountCredentails, idx: number): Promise<void> => {
-        var result = window.confirm("Are you sure you want to delete this bank account details?");
-        if (!result) return;
+        // var result = window.confirm("Are you sure you want to delete this bank account details?");
+        // if (!result) return;
+        const result = await window.api.showConfirm("Confirm Deletion", "Are you sure you want to delete this bank account details?", "warning");
 
-        var bankAccountCredentails = bankAccountDetailsList;
-        bankAccountCredentails.splice(idx, 1);
-        setBankAccountDetailsList([...bankAccountCredentails]);
-        await writeBankAccountCredentialsToStorage(bankAccountCredentails, userSettings);
-        await fetchBankAccountCredentailsData();
+        if (result.response === 0) { // Ok
+            var bankAccountCredentails = bankAccountDetailsList;
+            bankAccountCredentails.splice(idx, 1);
+            setBankAccountDetailsList([...bankAccountCredentails]);
+            await writeBankAccountCredentialsToStorage(bankAccountCredentails, userSettings);
+            await fetchBankAccountCredentailsData();
+        }
+        
     };
 
     const onEditBankAccountDetails = (idx: number) => {
@@ -250,7 +255,7 @@ const BankAccountCredentialListComponent: React.FC<IBankAccountCredentialsListCo
     return (
         <Box p={2} sx={{ height: 400, width: '98%' }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">Bank Account Credentials</Typography>
+                <Typography variant="h6">Bank Account Details</Typography>
                 <Button variant="contained" color="primary" onClick={() => openAddBankAccountCredentailsModal()}>Add New</Button>
             </Box>
             <DataGrid

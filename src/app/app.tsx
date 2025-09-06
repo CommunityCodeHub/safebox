@@ -1,21 +1,29 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider, CssBaseline } from '@mui/material';
-import theme from '../theme';
+import windowsFileManagerTheme from '../theme/windowsFileManagerTheme';
 import Login from './user-components/Login';
 import RegisterUser from './user-components/RegisterUser';
 import Landing from './Landing';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import DashboardComponent from './dashboard-component/DashboardComponent';
+import ApplicationCredentialsListComponent from './application-credentail-components/application-credentails-list-component';
+import BankAccountCredentialListComponent from './bank-account-credentail-components/bank-account-credentails-list-component';
+import NotesListComponent from './notes-components/notes-list-component';
+import HelpComponent from './help-component/help-component';
 import { IUserSettings } from '../entities/db-entities/user-settings';
 import { ApplicationConstants } from '../entities/application.constants';
 import { UserSettingsContext, UserSettingsProvider } from './services/user-settings-context';
+import { HashRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AUTO_LOGOUT_MINUTES = 15;
 const AUTO_LOGOUT_MS = AUTO_LOGOUT_MINUTES * 60 * 1000;
 
 
 const App: React.FC = () => {
-	const [showRegister, setShowRegister] = React.useState(false);
-	const [loginError, setLoginError] = React.useState<string | undefined>(undefined);
+	
+	const navigate = useNavigate();
 	const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(false);
 	const [userSettings, setUserSettings] = React.useState<IUserSettings | null>(null);
 
@@ -56,6 +64,11 @@ const App: React.FC = () => {
 
 	}, []);
 
+	const onLoginComplete = (userSettings: IUserSettings) => {
+		setUserSettings(userSettings);
+		setIsUserLoggedIn(true);
+	};
+
 	const signOutLoggedInUser = () => {
 		sessionStorage.clear();
 		window.location.reload();
@@ -83,9 +96,10 @@ const App: React.FC = () => {
 		return false;
 	}
 
+	//TODO: Move this method to a common place. 
 	const ReadUserSettingsFile = async (username: string): Promise<IUserSettings | undefined> => {
 		if (!window.api || typeof window.api.readUserSettingsFile !== 'function') {
-			setLoginError('Read user settings file API not available.');
+			window.api.showAlert('Unhandled Exception', 'Read user settings file API not available. Please check application logs for details.', 'error');
 			return;
 		}
 		const result = await window.api.readUserSettingsFile(username);
@@ -97,81 +111,60 @@ const App: React.FC = () => {
 		}
 
 		if (result.error == ApplicationConstants.Messages.USER_SETTINGS_FILE_NOT_FOUND) {
-			window.confirm("It looks like your account is not yet registered for this application on this device. If you’ve already registered on some another device, please use the same UserName, Workspace Folder (Cloud Folder) and Encryption Key to register your account here as well.");
-			setShowRegister(true);
-			return;
+			const result = await window.api.showConfirm("Confirm Registration", "It looks like your account is not yet registered for this application on this device. If you’ve already registered on some another device, please use the same UserName, Workspace Folder (Cloud Folder) and Encryption Key to register your account here as well.", "warning");
+			if (result.response === 0) { // Ok
+				navigate("/register");
+				return;
+			}
 		}
 		if (result.error == ApplicationConstants.Messages.FAILED_TO_READ_USER_SETTINGS_FILE) {
-			alert("Failed to read user settings file. Please check application logs for details. ")
+			window.api.showAlert('Configuration Error', 'Failed to read user settings file. Please check application logs for details.', 'error');
 		}
 	}
 
-
-	const handleLogin = async (username: string, password: string) => {
-		setLoginError(undefined);
-		const userSettings = await ReadUserSettingsFile(username);
-		if (!userSettings) {
-			setLoginError('Incorrect username or account not registered. Please register your account by clicking Register Button on this page.');
-			return;
-		}
-
-		if (password !== userSettings.Password) {
-			setLoginError('Incorrect password.');
-		}
-
-		setIsUserLoggedIn(true);
-		sessionStorage.setItem('IsLoggedIn', 'true');
-		sessionStorage.setItem('LastLoggedInTime', new Date().getTime().toString());
-		sessionStorage.setItem('UserName', username);
-	};
-
-
-	const handleRegister = async (username: string, password: string, workspacePath: string, encryptionKey: string) => {
-		// Call the exposed API from preload
-		if (window.api && typeof window.api.registerUser === 'function') {
-			var userSettings: IUserSettings = {
-				UserName: username,
-				Password: password,
-				WorkspacePath: workspacePath,
-				EncryptionKey: encryptionKey
-			}
-
-			const result = await window.api.writeUserSettingsFile(userSettings);
-			if (result.success) {
-				setUserSettings(userSettings);
-				setShowRegister(false);
-				setIsUserLoggedIn(false);
-				alert(`User Registration successful!. Please login to proceed.`);
-			} else {
-				alert(`Registration failed: ${result.error}`);
-			}
-		} else {
-			alert('Registration API not available.');
-		}
-	};
-
-	return (
-		<ThemeProvider theme={theme}>
+		return (
+			<ThemeProvider theme={windowsFileManagerTheme}>
 			<CssBaseline />
-			{isUserLoggedIn ? (
-				<UserSettingsContext.Provider value={userSettings}>
-					<Landing />
-				</UserSettingsContext.Provider>
-			) : showRegister ? (
-				<RegisterUser
-					onRegister={handleRegister}
-					onBackToLogin={() => setShowRegister(false)}
-				/>
-			) : (
-				<Login
-					onLogin={handleLogin}
-					onRegister={() => setShowRegister(true)}
-					error={loginError}
-				/>
-			)}
+					<Routes>
+						{/* Protected routes */}
+						<Route path="/app" element={
+							isUserLoggedIn ? (
+								<UserSettingsContext.Provider value={userSettings}>
+									<Landing />
+								</UserSettingsContext.Provider>
+							) : (
+								<Navigate to="/login" replace />
+							)
+						}>
+							  <Route path="dashboard" element={<DashboardComponent />} />
+							  <Route path="application-credentials" element={<ApplicationCredentialsListComponent />} />
+							  <Route path="bank-account-credentials" element={<BankAccountCredentialListComponent />} />
+							  <Route path="notes" element={<NotesListComponent />} />
+							  <Route path="help" element={<HelpComponent />} />
+							  <Route index element={<Navigate to="dashboard" replace />} />
+						</Route>
+						{/* Auth routes */}
+						<Route path="/login" element={
+							isUserLoggedIn ? (
+								<Navigate to="/app/dashboard" replace />
+							) : (
+								<Login onLoginComplete={onLoginComplete}
+									
+								/>
+							)
+						} />
+						<Route path="/register" element={
+							<RegisterUser/>
+						} />
+						{/* Redirect root and unknown routes */}
+						<Route path="/" element={<Navigate to={isUserLoggedIn ? "/app/dashboard" : "/login"} replace />} />
+						<Route path="*" element={<Navigate to={isUserLoggedIn ? "/app/dashboard" : "/login"} replace />} />
+					</Routes>
 		</ThemeProvider>
 	);
 };
 
 const root = createRoot(document.body);
-root.render(<App />);
+root.render(<HashRouter>
+    <App />
+  </HashRouter>);

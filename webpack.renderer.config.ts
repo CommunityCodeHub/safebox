@@ -9,6 +9,10 @@ rules.push({
 });
 
 export const rendererConfig: Configuration = {
+  cache: {
+    type: 'filesystem',
+  },
+  devtool: process.env.NODE_ENV === 'development' ? 'eval-cheap-module-source-map' : 'source-map',
   module: {
     rules,
   },

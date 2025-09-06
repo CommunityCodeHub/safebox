@@ -24,7 +24,7 @@ const createMainWindow = (): void => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       nodeIntegration: true
     },
-    autoHideMenuBar: false,
+    autoHideMenuBar: process.env.NODE_ENV === 'development' ? false : true,
     icon: path.join(__dirname, "assets", "images", 'safebox.png'),
     title: "SafeBox"
     
@@ -77,3 +77,4 @@ import './main/user-settings';
 import './main/notes-file-manager'; 
 import './main/logger-ipc';
 import './main/directory-browser'; 
+import './main/alert-dialog'; 

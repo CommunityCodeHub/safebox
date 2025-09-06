@@ -75,7 +75,8 @@ if (registerForm) {
       const modalInstance = bootstrap.Modal.getInstance(modal);
       if (modalInstance) modalInstance.hide();
     }
-    alert('Registration successful! You can now log in.');
+    //alert('Registration successful! You can now log in.');
+    window.api.showAlert('Registration Successful', 'You have successfully registered. You can now log in.', 'info');
   });
 }
 

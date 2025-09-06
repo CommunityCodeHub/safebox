@@ -64,7 +64,15 @@ const AddAddtionalInfoComponent: React.FC<ApplicationCredentialsComponentProps> 
                     required
                 />
                 <Box display="flex" justifyContent="flex-end" gap={1}>
-                    <Button type="button" onClick={props.onClose} variant="outlined" color="secondary">Cancel</Button>
+                                        <Button
+                                            type="button"
+                                            onClick={props.onClose}
+                                            variant="outlined"
+                                            color="primary"
+                                            sx={{ fontWeight: 600, borderColor: 'primary.main', color: 'primary.main', background: '#f3f6fa', '&:hover': { background: '#e3f2fd', borderColor: 'primary.dark', color: 'primary.dark' } }}
+                                        >
+                                            Cancel
+                                        </Button>
                     <Button type="button" onClick={onAddUpdateClick} variant="contained" color="primary" disabled={!!keyError || !key}>Add</Button>
                 </Box>
             </Box>
