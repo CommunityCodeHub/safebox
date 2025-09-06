@@ -25,7 +25,7 @@ const createMainWindow = (): void => {
       nodeIntegration: true
     },
     autoHideMenuBar: process.env.NODE_ENV === 'development' ? false : true,
-    icon: path.join(__dirname, "assets", "images", 'safebox.png'),
+    icon: path.join(__dirname, "assets", "images", 'safebox.ico'),
     title: "SafeBox"
     
   });

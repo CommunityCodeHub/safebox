@@ -14,7 +14,7 @@ import { rendererConfig } from './webpack.renderer.config';
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
-    icon: './src/assets/images/safebox.png', // Electron Forge will use .ico/.icns/.png as needed
+    icon: './src/assets/images/safebox.ico', // Electron Forge will use .ico/.icns/.png as needed
   },
   rebuildConfig: {force: true},
   makers: [

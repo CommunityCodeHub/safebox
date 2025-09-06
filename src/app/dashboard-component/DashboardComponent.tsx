@@ -10,8 +10,7 @@ const DashboardComponent: React.FC = () => {
     <Box display="flex" alignItems="center" justifyContent="center" minHeight="80vh" bgcolor="#f5f7fa">
       <Paper elevation={6} sx={{ p: 5, maxWidth: 600, width: '100%', borderRadius: 4, boxShadow: 6 }}>
         <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
-          <Avatar src={"/assets/images/safebox.png"} alt={"SafeBox Logo"} sx={{ width: 90, height: 90, mb: 2, boxShadow: 2 }} />
-          {/* <Image href={"assets/images/safebox.png"} alt={"SafeBox Logo"} style={{ width: 90, height: 90, marginBottom: 16, boxShadow: '2px 2px 6px rgba(0,0,0,0.2)' }} /> */}
+          <Avatar src={"/assets/images/safebox.ico"} alt={"SafeBox Logo"} sx={{ width: 90, height: 90, mb: 2, boxShadow: 2 }} />
           <Typography variant="h3" align="center" fontWeight={700} color="primary.main" gutterBottom>
             SafeBox
           </Typography>

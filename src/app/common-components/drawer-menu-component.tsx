@@ -21,7 +21,7 @@ const DrawerMenu: React.FC<DrawerMenuProps> = ({ open, onClose, onLogout, breadc
     <Drawer anchor="left" open={open} onClose={onClose} PaperProps={{ sx: { bgcolor: '#f7f9fb', borderRight: '1.5px solid #e0e0e0' } }}>
       <Box sx={{ width: 270, p: 0 }}>
         <Box display="flex" flexDirection="column" alignItems="center" py={3} sx={{ background: 'linear-gradient(135deg, #e3f2fd 0%, #f7f9fb 100%)' }}>
-          <Avatar src="/assets/images/safebox.png" alt="SafeBox Logo" sx={{ width: 56, height: 56, mb: 1, boxShadow: 1 }} />
+          <Avatar src="/assets/images/safebox.ico" alt="SafeBox Logo" sx={{ width: 56, height: 56, mb: 1, boxShadow: 1 }} />
           <Typography variant="h6" fontWeight={700} color="primary.main" letterSpacing={1} sx={{ mb: 0.5 }}>
             SafeBox
           </Typography>

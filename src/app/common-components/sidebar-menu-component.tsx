@@ -42,7 +42,7 @@ const SidebarMenu: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
       }}
     >
       <Box display="flex" alignItems="center" width="100%" px={2} mb={2}>
-        <Avatar src="/assets/images/safebox.png" alt="SafeBox Logo" sx={{ width: 40, height: 40, boxShadow: 1, mr: 1.5 }} />
+        <Avatar src="/assets/images/safebox.ico" alt="SafeBox Logo" sx={{ width: 40, height: 40, boxShadow: 1, mr: 1.5 }} />
         <Typography
           variant="h6"
           fontWeight={700}
