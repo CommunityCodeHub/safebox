@@ -8,8 +8,6 @@ import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
 import { ElectronegativityPlugin } from '@electron-forge/plugin-electronegativity';
-
-
 import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
 
@@ -19,7 +17,12 @@ const config: ForgeConfig = {
     icon: './src/assets/images/safebox.png', // Electron Forge will use .ico/.icns/.png as needed
   },
   rebuildConfig: {force: true},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+  new MakerSquirrel({}), // Windows
+  new MakerZIP({}),      // macOS
+  new MakerDeb({}),      // Linux DEB
+  new MakerRpm({})       // Linux RPM
+],
   plugins: [
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
