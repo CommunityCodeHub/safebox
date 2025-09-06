@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make",
+  "make": "node bump-version.js && node update-app-version.js && node tag-version.js && electron-forge make && node update-readme.js",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "postinstall": "patch-package"
