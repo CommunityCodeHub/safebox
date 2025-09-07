@@ -27,10 +27,16 @@ jobs:
       - name: Build binaries
         run: npm run make
 
-      - name: Upload Electron Forge output to GitHub Release
+      - name: Archive Electron Forge output
+        run: |
+          cd out
+          zip -r ../safebox-out.zip .
+        shell: bash
+
+      - name: Upload zipped output to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: out/**/*
+          files: safebox-out.zip
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
