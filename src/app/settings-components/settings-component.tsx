@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React,  { useState } from 'react';
 import { Box, Button, TextField, Typography, Paper, InputAdornment, IconButton, Tooltip } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useUserSettings } from '../services/user-settings-context';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-
+import { useNavigate } from 'react-router-dom';
 interface SettingsComponentProps {
-  onClose: () => void;
+  
 }
 
 const SettingsComponent: React.FC<SettingsComponentProps> = (props) => {
@@ -16,6 +16,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = (props) => {
   const [encryptionKey, setEncryptionKey] = useState(userSettings.EncryptionKey || '');
   const [error, setError] = useState('');
   const [showEncryptionKey, setShowEncryptionKey] = React.useState(false);
+  const navigate = useNavigate();
   const handleSave = () => {
     if (!workspacePath.trim()) {
       setError('Workspace folder path is required.');
@@ -28,7 +29,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = (props) => {
     setError('');
 
 
-    props.onClose();
+    navigate('app/dashboard'); 
   };
 
   return (
@@ -110,13 +111,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = (props) => {
         </Typography>
       )}
       <Box mt={3} display="flex" justifyContent="flex-end">
-        {/* <Button variant="contained" color="primary" onClick={handleSave}>
-          Save
-        </Button>
-        <Button sx={{ mr: 2 }} onClick={props.onClose}>
-          Cancel
-        </Button> */}
-        <Button variant="contained" color="primary" onClick={props.onClose}>
+        <Button variant="contained" color="primary" onClick={() => navigate('app/dashboard')}>
           Close
         </Button>
       </Box>

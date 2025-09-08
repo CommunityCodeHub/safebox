@@ -16,6 +16,7 @@ import { ApplicationConstants } from '../entities/application.constants';
 import { UserSettingsContext, UserSettingsProvider } from './services/user-settings-context';
 import { HashRouter } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import SettingsComponent from './settings-components/settings-component';
 
 const AUTO_LOGOUT_MINUTES = 15;
 const AUTO_LOGOUT_MS = AUTO_LOGOUT_MINUTES * 60 * 1000;
@@ -140,6 +141,7 @@ const App: React.FC = () => {
 							  <Route path="application-credentials" element={<ApplicationCredentialsListComponent />} />
 							  <Route path="bank-account-credentials" element={<BankAccountCredentialListComponent />} />
 							  <Route path="notes" element={<NotesListComponent />} />
+							  <Route path="settings" element={<SettingsComponent />} />
 							  <Route path="help" element={<HelpComponent />} />
 							  <Route index element={<Navigate to="dashboard" replace />} />
 						</Route>

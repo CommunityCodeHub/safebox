@@ -77,3 +77,58 @@ ipcMain.handle('list-note-pages', async (_event, { workspacePath }) => {
     return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 });
+
+// Delete a note page file
+ipcMain.handle('delete-note-page', async (_event, { workspacePath, pageTitle }) => {
+  try {
+    if (!pageTitle) throw new Error('Page title is required');
+    const fileName = `${pageTitle}.note`;
+    const filePath = path.join(workspacePath, ApplicationConstants.FileNames.NOTES_FOLDER_NAME, fileName);
+    if (!fs.existsSync(filePath)) {
+      return { success: false, error: 'Note file not found.' };
+    }
+    fs.unlinkSync(filePath);
+    AppLogger.getInstance().info(`Note page deleted: ${filePath}`);
+    return { success: true };
+  } catch (err) {
+    AppLogger.getInstance().error('delete-note-page: ' + (err instanceof Error ? err.message : String(err)));
+    return { success: false, error: err instanceof Error ? err.message : String(err) };
+  }
+});
+
+// Rename a note page file
+ipcMain.handle('rename-note-page', async (_event, { workspacePath, oldTitle, newTitle }) => {
+  try {
+    if (!oldTitle || !newTitle) throw new Error('Both old and new page titles are required');
+    const oldFileName = `${oldTitle}.note`;
+    const oldFilePath = path.join(workspacePath, ApplicationConstants.FileNames.NOTES_FOLDER_NAME, oldFileName);
+    if (!fs.existsSync(oldFilePath)) {
+      return { success: false, error: 'Old note file not found.' };
+    }
+    const newFileName = `${newTitle}.note`;
+    const newFilePath = path.join(workspacePath, ApplicationConstants.FileNames.NOTES_FOLDER_NAME, newFileName);
+    fs.renameSync(oldFilePath, newFilePath);
+    AppLogger.getInstance().info(`Note page renamed: ${oldFilePath} to ${newFilePath}`);
+    return { success: true };
+  } catch (err) {
+    AppLogger.getInstance().error('rename-note-page: ' + (err instanceof Error ? err.message : String(err)));
+    return { success: false, error: err instanceof Error ? err.message : String(err) };
+  }
+});
+
+ipcMain.handle('create-note-page', async (_event, { workspacePath, pageTitle }) => {
+  try {
+    if (!pageTitle) throw new Error('Page title is required');
+    const fileName = `${pageTitle}.note`;
+    const filePath = path.join(workspacePath, ApplicationConstants.FileNames.NOTES_FOLDER_NAME, fileName);
+    if (fs.existsSync(filePath)) {
+      return { success: false, error: 'Note file already exists.' };
+    }
+    fs.writeFileSync(filePath, JSON.stringify({ cipherText: '', iv: '', tag: '' }));
+    AppLogger.getInstance().info(`Note page created: ${filePath}`);
+    return { success: true };
+  } catch (err) {
+    AppLogger.getInstance().error('create-note-page: ' + (err instanceof Error ? err.message : String(err)));
+    return { success: false, error: err instanceof Error ? err.message : String(err) };
+  }
+});

@@ -13,6 +13,7 @@ const menuItems = [
   { label: 'Application Details', icon: <AppsIcon color="primary" />, path: '/app/application-credentials' },
   { label: 'Bank Account Details', icon: <AccountBalanceIcon color="primary" />, path: '/app/bank-account-credentials' },
   { label: 'Notes', icon: <NotesIcon color="primary" />, path: '/app/notes' },
+  { label: 'Settings', icon: <NotesIcon color="primary" />, path: '/app/settings' },
   { label: 'Help', icon: <HelpOutlineIcon color="primary" />, path: '/app/help' },
 ];
 

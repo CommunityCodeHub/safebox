@@ -54,18 +54,47 @@ function NotesListComponent() {
 		// Remove file from disk (optional: implement delete-note-page in backend)
 		// For now, just remove from UI
 		const idx = pages.findIndex(p => p.id === id);
+		const pageToBeDeleted = pages[idx]; 
 		const newPages = pages.filter(page => page.id !== id);
+
+		const confirmResult = await window.api.showConfirm('Confirm Deletion', 'Do you really want to delete this page? Once deleted, it cannot be restored.', "warning"); 
+		if (confirmResult.response !== 0){
+			return; 
+		}
+
+		const deleteResult = await window.api.deleteNotePage(workspacePath, pageToBeDeleted.title);
+		
+		if (!deleteResult.success) {
+			//alert(`Failed to delete note page: ${result.error}`);
+			window.api.showAlert('Failed to Delete Note Page', `Failed to delete note page: ${deleteResult.error}`, 'error');
+			return;
+		}
+
 		setPages(newPages);
+
 		if (newPages.length > 0) {
 			const nextIdx = idx < newPages.length ? idx : newPages.length - 1;
 			setSelectedPageId(newPages[nextIdx].id);
 		} else {
 			setSelectedPageId('');
 		}
+		
 	};
 
 	const handleRenamePage = async () => {
 		// Save new file with new title, delete old file (not implemented here)
+		const idx = pages.findIndex(p => p.id === selectedPageId);
+		const pageToBeRenamed = pages[idx];
+		const confirmResult = await window.api.showConfirm('Confirm Rename', `Do you really want to rename this page from "${pageToBeRenamed.title}" to "${editedTitle}"?`, "warning");
+		if (confirmResult.response !== 0) {
+			return;
+		}
+		const renameResult = await window.api.renameNotePage(workspacePath, pageToBeRenamed.title, editedTitle);
+		if (!renameResult.success) {
+			window.api.showAlert('Failed to Rename Note Page', `Failed to rename note page: ${renameResult.error}`, 'error');
+			return;
+		}
+
 		setPages(pages.map(page => page.id === selectedPageId ? { ...page, title: editedTitle, id: editedTitle } : page));
 		setEditingTitle(false);
 	};
@@ -73,6 +102,11 @@ function NotesListComponent() {
 	const handleAddPage = async () => {
 		if (!newPageTitle.trim()) return;
 		const newId = newPageTitle;
+		const createResult = await window.api.createNotePage(workspacePath, newId);
+		if (!createResult.success) {
+			window.api.showAlert('Failed to Create Note Page', `Failed to create note page: ${createResult.error}`, 'error');
+			return;
+		}
 		setPages([...pages, { id: newId, title: newPageTitle, content: '' }]);
 		setSelectedPageId(newId);
 		setNewPageTitle('');

@@ -16,6 +16,9 @@ declare global {
   writeNotePage: (workspacePath: string, pageTitle: string, content: string, encryptionKey: string) => Promise<any>;
   readNotePage: (workspacePath: string, pageTitle: string, encryptionKey: string) => Promise<any>;
   listNotePages: (workspacePath: string) => Promise<any>;
+  deleteNotePage: (workspacePath: string, pageTitle: string) => Promise<any>;
+  renameNotePage: (workspacePath: string, oldTitle: string, newTitle: string) => Promise<any>;
+  createNotePage: (workspacePath: string, pageTitle: string) => Promise<any>;
 
   isValidEncryptionKey(encryptionKey: string, workspacePath: string, username: string): Promise<any>;
   showDirectoryBrowser: () => Promise<string | undefined>; 
