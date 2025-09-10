@@ -17,11 +17,16 @@ You can find detailed guides and help topics below:
 
 ## Latest Installers
 [View all releases and downloads on GitHub](https://github.com/CommunityCodeHub/safebox/releases)
-| Platform | Installer |
-|---|---|
-| Windows | [safe-box-1.0.1 Setup.exe](out/make/squirrel.windows/x64/safe-box-1.0.1 Setup.exe) / [safe-box-win32-x64-1.0.0.zip](out/make/zip/win32/x64/safe-box-win32-x64-1.0.0.zip) / [safe-box-win32-x64-1.0.1.zip](out/make/zip/win32/x64/safe-box-win32-x64-1.0.1.zip) |
-| macOS | [safe-box-win32-x64-1.0.0.zip](out/make/zip/win32/x64/safe-box-win32-x64-1.0.0.zip) / [safe-box-win32-x64-1.0.1.zip](out/make/zip/win32/x64/safe-box-win32-x64-1.0.1.zip) |
-| Linux | [safe-box-win32-x64-1.0.0.zip](out/make/zip/win32/x64/safe-box-win32-x64-1.0.0.zip) / [safe-box-win32-x64-1.0.1.zip](out/make/zip/win32/x64/safe-box-win32-x64-1.0.1.zip) |
+
+- Per-platform artifacts (recommended):
+  - Windows: `safebox-windows.zip` — contains the Windows installer(s) and related artifacts.
+  - macOS: `safebox-macos.zip` — contains the macOS installer(s) and related artifacts.
+  - Linux: `safebox-linux.zip` — contains the Linux installer(s) and related artifacts.
+
+- Combined archive (preserves folder structure):
+  - `safebox-all-platforms.zip` — a single zip containing the full build output for all platforms; downloading and extracting this archive will preserve the folder structure produced by the build.
+
+Note: All artifacts are attached to each GitHub Release. Visit the Releases page linked above and download the asset matching the platform you need.
 
 ## Development Environment Setup 
 
