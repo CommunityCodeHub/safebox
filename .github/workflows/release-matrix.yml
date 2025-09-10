@@ -28,7 +28,7 @@ jobs:
         run: npm run make
 
       - name: Upload out folder as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: out-${{ matrix.os }}
           path: out
@@ -45,7 +45,7 @@ jobs:
         shell: bash
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: downloaded-artifacts
 
