@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -27,20 +27,58 @@ jobs:
       - name: Build binaries
         run: npm run make
 
-      - name: Install zip utility
-        run: choco install zip -y
-        shell: powershell
+      - name: Upload out folder as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: out-${{ matrix.os }}
+          path: out
 
-      - name: Archive Electron Forge output
+  aggregate-and-release:
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Ensure zip is installed
+        run: sudo apt-get update && sudo apt-get install -y zip
+        shell: bash
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: downloaded-artifacts
+
+      - name: Create platform zips and combined archive
         run: |
-          cd out
-          zip -r ../safebox-out.zip .
+          cd downloaded-artifacts
+          # Create zip per artifact folder with friendly names
+          for dir in *; do
+            case "$dir" in
+              out-windows-latest)
+                zipname="../safebox-windows.zip" ;;
+              out-macos-latest)
+                zipname="../safebox-macos.zip" ;;
+              out-ubuntu-latest)
+                zipname="../safebox-linux.zip" ;;
+              *)
+                zipname="../safebox-${dir}.zip" ;;
+            esac
+            zip -r "$zipname" "$dir"
+          done
+          # Combined archive containing all per-platform directories
+          cd ..
+          zip -r safebox-all-platforms.zip downloaded-artifacts
         shell: bash
 
       - name: Upload zipped output to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: safebox-out.zip
+          files: |
+            safebox-windows.zip
+            safebox-macos.zip
+            safebox-linux.zip
+            safebox-all-platforms.zip
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
