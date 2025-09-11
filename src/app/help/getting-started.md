@@ -48,6 +48,8 @@ Welcome to SafeBox! This guide will help you set up and start using the applicat
 
 7. Click **Register** to complete account creation.  
 
+![Register User](/../../assets/images/screenshots/RegisterUser.png)
+
 
 ## Logging In
 
