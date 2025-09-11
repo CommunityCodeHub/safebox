@@ -60,6 +60,7 @@
     "@mui/material": "^7.3.1",
     "@mui/x-data-grid": "^8.10.0",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.6.2",
     "lexical": "^0.34.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

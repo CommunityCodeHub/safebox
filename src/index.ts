@@ -24,8 +24,8 @@ const createMainWindow = (): void => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       nodeIntegration: true
     },
-    autoHideMenuBar: process.env.NODE_ENV === 'development' ? false : true,
-    icon: path.join(__dirname, "assets", "images", 'safebox.ico'),
+    autoHideMenuBar: process.env.NODE_ENV === 'production',
+    icon: path.join(__dirname, "assets", "images", 'safebox.png'),
     title: "SafeBox"
     
   });
@@ -34,6 +34,13 @@ const createMainWindow = (): void => {
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   mainWindow.webContents.openDevTools();
+  // Initialize auto-updater
+  try {
+    const { initializeAutoUpdater } = require('./main/auto-updater');
+    initializeAutoUpdater(mainWindow);
+  } catch (err) {
+    console.warn('Auto-updater initialization failed:', err);
+  }
 };
 
 
@@ -77,4 +84,4 @@ import './main/user-settings';
 import './main/notes-file-manager'; 
 import './main/logger-ipc';
 import './main/directory-browser'; 
-import './main/alert-dialog'; 
+import './main/alert-dialog';

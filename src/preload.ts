@@ -46,10 +46,13 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('list-note-pages', { workspacePath }),
   deleteNotePage: (workspacePath: string, pageTitle: string) =>
     ipcRenderer.invoke('delete-note-page', { workspacePath, pageTitle }),
-  createNotePage: (workspacePath: string, pageTitle: string) =>
-    ipcRenderer.invoke('create-note-page', { workspacePath, pageTitle }),
-  renameNotePage: (workspacePath: string, oldTitle: string, newTitle: string) =>
-    ipcRenderer.invoke('rename-note-page', { workspacePath, oldTitle, newTitle }),
+
+  // Update APIs
+  checkForUpdates: (manifestUrl?: string) => ipcRenderer.invoke('check-for-updates', { manifestUrl }),
+  downloadUpdate: () => ipcRenderer.invoke('download-update'),
+  quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),
+  onUpdateEvent: (callback: (event: any) => void) => ipcRenderer.on('update-event', (_e, data) => callback(data)),
+
   showDirectoryBrowser: (): Promise<string | undefined> =>
     ipcRenderer.invoke('show-directory-browser'),
   isValidEncryptionKey: (encryptionKey: string, workspacePath: string, username: string): Promise<any> =>
