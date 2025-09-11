@@ -24,6 +24,12 @@ declare global {
   showDirectoryBrowser: () => Promise<string | undefined>; 
   showAlert: (title: string, message: string, type: 'info' | 'warning' | 'error') => Promise<any>;
   showConfirm: (title: string, message: string, type: 'info' | 'warning' | 'error') => Promise<any>;
+  // Update APIs
+  checkForUpdates: (manifestUrl?: string) => Promise<any>;
+  downloadUpdate: () => Promise<any>;
+  quitAndInstall: () => Promise<any>;
+  onUpdateEvent: (callback: (event: any) => void) => void;
+  pathExists: (targetPath: string) => Promise<any>;
   // Logging methods
   setLogLevel: (level: string) => Promise<any>;
   logMessage: (level: string, message: string) => Promise<any>;

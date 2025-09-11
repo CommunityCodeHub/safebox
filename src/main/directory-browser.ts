@@ -1,6 +1,7 @@
 import { dialog } from 'electron';
 import { ipcMain } from 'electron';
 import { AppLogger } from './app-logger';
+import fs from 'fs';
 
 
 async function openFolderBrowserDialog(): Promise<string | undefined> {
@@ -31,4 +32,18 @@ ipcMain.handle('show-directory-browser', async (_event) => {
         AppLogger.getInstance().error('show-directory-browser: ' + (err instanceof Error ? err.message : String(err)));
         return { success: false, error: err instanceof Error ? err.message : String(err) };
     }
+});
+
+// Path existence check moved here from fs-utils for related directory operations
+ipcMain.handle('path-exists', async (_event, { targetPath }: { targetPath: string }) => {
+  try {
+    if (!targetPath) return { success: false, error: 'No path provided' };
+    const exists = fs.existsSync(targetPath);
+    if (!exists) return { success: false, exists: false, error: 'Path does not exist' };
+    const stat = fs.statSync(targetPath);
+    return { success: true, exists: true, isDirectory: stat.isDirectory() };
+  } catch (err) {
+    AppLogger.getInstance().error('path-exists: ' + (err instanceof Error ? err.message : String(err)));
+    return { success: false, error: err instanceof Error ? err.message : String(err) };
+  }
 });

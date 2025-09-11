@@ -58,6 +58,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('show-renderer-alert', { title, message, type }),
   showConfirm: (title: string, message: string, type: 'info' | 'warning' | 'error') =>
     ipcRenderer.invoke('show-renderer-confirm', { title, message, type }),
+  pathExists: (targetPath: string) => ipcRenderer.invoke('path-exists', { targetPath }),
 
 });
 

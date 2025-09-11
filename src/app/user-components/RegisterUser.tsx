@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Card, CardContent, TextField, Typography, Alert, InputAdornment, IconButton, Tooltip } from '@mui/material';
@@ -51,11 +50,15 @@ const registerUserAccount = async (username: string, password: string, workspace
 const RegisterUser: React.FC<RegisterUserProps> = (props) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
+  const [usernameError, setUsernameError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [workspacePath, setWorkspacePath] = useState('');
-  const [encryptionKey, setEncryptionKey] = useState('');
+  const [workspacePathError, setWorkspacePathError] = useState<string | null>(null);
+  const [encryptionKey, setEncryptionKey] = useState(uuidv4());
   const [showEncryptionKey, setShowEncryptionKey] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -72,6 +75,10 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
     }
     if (!isStrongPassword(password)) {
       setError('Password must be at least 8 characters, include one uppercase letter, one number, and one special character.');
+      return;
+    }
+    if (/\s/.test(username)) {
+      setError('Username cannot contain spaces.');
       return;
     }
 
@@ -133,9 +140,19 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
               fullWidth
               margin="normal"
               value={username}
-              onChange={e => setUsername(e.target.value)}
+              onChange={e => {
+                const raw = e.target.value;
+                setUsername(raw);
+                if (/\s/.test(raw)) {
+                  setUsernameError('Spaces are not allowed in the username');
+                } else {
+                  setUsernameError(null);
+                }
+              }}
               autoFocus
               required
+              error={!!usernameError}
+              helperText={usernameError || ''}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -150,7 +167,7 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
             />
             <TextField
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               variant="outlined"
               fullWidth
               margin="normal"
@@ -165,13 +182,22 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
                         <InfoOutlinedIcon />
                       </IconButton>
                     </Tooltip>
+                    <Tooltip title={showPassword ? 'Hide password' : 'Show password'}>
+                      <IconButton
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        onClick={() => setShowPassword(s => !s)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </Tooltip>
                   </InputAdornment>
                 ),
               }}
             />
             <TextField
               label="Confirm Password"
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               variant="outlined"
               fullWidth
               margin="normal"
@@ -186,6 +212,15 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
                         <InfoOutlinedIcon />
                       </IconButton>
                     </Tooltip>
+                    <Tooltip title={showConfirmPassword ? 'Hide password' : 'Show password'}>
+                      <IconButton
+                        aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                        onClick={() => setShowConfirmPassword(s => !s)}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </Tooltip>
                   </InputAdornment>
                 ),
               }}
@@ -197,7 +232,21 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
               margin="normal"
               value={workspacePath}
               onChange={e => setWorkspacePath(e.target.value)}
+              onBlur={async () => {
+                if (!workspacePath) {
+                  setWorkspacePathError('Please provide a workspace folder path.');
+                  return;
+                }
+                const exists = await window.api.pathExists(workspacePath);
+                if (!exists.success || !exists.isDirectory) {
+                  setWorkspacePathError('Path does not exist or is not a folder.');
+                } else {
+                  setWorkspacePathError(null);
+                }
+              }}
               required
+              error={!!workspacePathError}
+              helperText={workspacePathError || ''}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -212,6 +261,13 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
                         const result: any = await window.api.showDirectoryBrowser();
                         if (result.success) {
                           setWorkspacePath(result.folderPath);
+                          // Validate the selected folder
+                          const exists = await window.api.pathExists(result.folderPath);
+                          if (!exists.success || !exists.isDirectory) {
+                            setWorkspacePathError('Selected path does not exist or is not a folder.');
+                          } else {
+                            setWorkspacePathError(null);
+                          }
                         }
                       }}
                       edge="end"
@@ -239,9 +295,9 @@ const RegisterUser: React.FC<RegisterUserProps> = (props) => {
                         <InfoOutlinedIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Generate Encryption Key">
+                    <Tooltip title="Re-Generate Encryption Key">
                       <IconButton
-                        aria-label="generate encryption key"
+                        aria-label="re-generate encryption key"
                         onClick={() => setEncryptionKey(uuidv4())}
                         edge="end"
                       >
